@@ -8,6 +8,7 @@ use Src\Routing\Route;
 
 return [
     Route::get('/', [HomeController::class, 'index']),
-    Route::post('/register', [MemberController::class, 'register']),
-    Route::get('/members', [MemberController::class, 'index'])
+    Route::get('/members', [MemberController::class, 'index']),
+    Route::get('/register/back', [MemberController::class, 'back']),
+    Route::post('/register/next', [MemberController::class, 'next'])
 ];

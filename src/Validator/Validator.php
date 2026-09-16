@@ -40,7 +40,6 @@ class Validator
 
                 if ($error) {
                     $errors[$field] = $error;
-                    break;
                 }
             }
         }

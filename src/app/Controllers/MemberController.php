@@ -5,34 +5,53 @@ declare(strict_types=1);
 namespace Src\app\Controllers;
 
 use Src\app\Models\Member;
-use Src\app\Requests\PersonRequest;
+use Src\app\Requests\MemberRequest;
 use Src\Controller\Controller;
 
 class MemberController extends Controller
 {
-    public function register(): void
+    private function registerStep1(): void
     {
-        $personRequest = new PersonRequest($this->request->validator, $this->request->get, $this->request->post, $this->request->files, $this->request->server);
-        $person = new Member($this->db);
-        $result = $personRequest->validated();
-        $_SESSION['old_data'] = $result['validatedData'];
+        $memberRequest = new MemberRequest($this->request->validator, $this->request->get, $this->request->post, $this->request->files, $this->request->server);
+        $member = new Member($this->db);
+        $result = $memberRequest->validated();
+        $validatedData = $result['validatedData'];
 
         if ($errors = $result['errors']) {
-            $_SESSION['errors'] = $errors;;
-            $this->redirect('/');
+            http_response_code(422);
+            echo json_encode(['errors' => $errors]);
         }
 
-        $person->create($result['validatedData']);
-        $this->redirect('/members');
+        $member->create($validatedData);
+
+        $_SESSION['steps']['step1'] = ['data' => $validatedData];
     }
 
     public function index(): void
     {
-        $person = new Member($this->db);
-        $members = $person->getMembers();
+        $member = new Member($this->db);
+        $members = $member->getMembers();
 
         $this->view->view('members', ['members' => $members]);
     }
 
+    public function back(): void
+    {
+        $_SESSION['steps']['current'] = 'step1';
+        http_response_code(200);
+        echo json_encode(['backStep' => 'step1']);
+    }
 
+    public function next(): void
+    {
+
+        if (!isset($_SESSION['steps']['step1'])) {
+            $this->registerStep1();
+            return;
+        }
+
+        $_SESSION['steps']['current'] = 'step2';
+        http_response_code(200);
+        echo json_encode(['nextStep' => 'step2']);
+    }
 }

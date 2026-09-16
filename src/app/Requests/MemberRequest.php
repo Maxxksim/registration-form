@@ -6,7 +6,7 @@ namespace Src\app\Requests;
 
 use Src\Request\Request;
 
-class PersonRequest extends Request
+class MemberRequest extends Request
 {
     public function rules(): array
     {
@@ -20,7 +20,7 @@ class PersonRequest extends Request
             'email' => ['required', 'email', 'unique'],
             'company' => ['string', 'max:255'],
             'position' => ['string', 'max:255'],
-            'aboutMe' => ['string'],
+            'about_me' => ['string'],
             'photo' => ['file', 'type:image/png,image/jpeg,image/webp', 'size:3']
         ];
     }

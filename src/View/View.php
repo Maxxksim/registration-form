@@ -6,9 +6,16 @@ namespace Src\View;
 
 class View
 {
-    public function view(string $view, array $args = []): void
+    public function view(string $template, array $args = []): void
+    {
+        $view = $this;
+        extract($args);
+        require_once __DIR__ . "/../app/Views/$template.php";
+    }
+
+    public function component(string $component, array $args = []): void
     {
         extract($args);
-        require_once __DIR__ . "/../app/Views/$view.php";
+        require __DIR__ . "/../app/Views/Components/$component.php";
     }
 }

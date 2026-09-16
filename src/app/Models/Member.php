@@ -8,6 +8,13 @@ use Src\Model\Model;
 
 class Member extends Model
 {
+    protected static function fields(): array
+    {
+        return [
+            'id', 'first_name', 'last_name', 'birthdate', 'report_subject', 'phone', 'country', 'email', 'path_to_photo', 'company', 'position', 'email'
+        ];
+    }
+
     public function create($data): void
     {
         $this->insert('members', [

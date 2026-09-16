@@ -12,7 +12,7 @@ class HomeController extends Controller
     public function index(): void
     {
         $errors = $_SESSION['errors'] ?? null;
-        unset($_SESSION['errors']);
-        $this->view->view('step1', ['countries' => $this->countries, 'errors' => $errors]);
+        $steps = $_SESSION['steps'] ?? ['current' => 'step1'];
+        $this->view->view('home', ['countries' => $this->countries, 'errors' => $errors, 'steps' => $steps]);
     }
 }
