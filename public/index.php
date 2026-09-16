@@ -22,6 +22,6 @@ $countries = new ISO3166();
 $db = new Db();
 $validator = new Validator($db);
 $request = new Request($validator, $_GET, $_POST, $_FILES, $_SERVER);
-$router = new Router($view, $countries, $request);
+$router = new Router($view, $countries, $request, $db);
 
 $router->startRouter();

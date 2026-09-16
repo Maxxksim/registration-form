@@ -8,7 +8,7 @@ use Src\app\Models\Member;
 use Src\app\Requests\PersonRequest;
 use Src\Controller\Controller;
 
-class PersonController extends Controller
+class MemberController extends Controller
 {
     public function register(): void
     {
