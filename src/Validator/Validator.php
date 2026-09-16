@@ -51,7 +51,7 @@ class Validator
     private function validateUnique(string $field, string $value): bool
     {
         if (in_array($field, $this->allowedFields)) {
-            $stmt = $this->db->pdo->prepare("SELECT * FROM persons WHERE $field = :value");
+            $stmt = $this->db->pdo->prepare("SELECT * FROM members WHERE $field = :value");
             $stmt->bindParam(':value', $value);
             $stmt->execute();
 

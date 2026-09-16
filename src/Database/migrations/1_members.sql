@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS persons
+CREATE TABLE IF NOT EXISTS members
 (
     id             INT AUTO_INCREMENT PRIMARY KEY,
     first_name     VARCHAR(100) NOT NULL,
