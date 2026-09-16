@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 /**
  * @var $countries
+ * @var $session
  */
 ?>
 
@@ -22,34 +23,43 @@ declare(strict_types=1);
 <div class="flex flex-col border m-3">
     <h3>To participate in the conference, please fill out the form:</h3>
 </div>
-
+<?php
+if (!empty($errors)): ?>
+    <ul class="list-disc marker:text-red-500 pl-5>">
+        <?php foreach ($errors as $error): ?>
+            <li><?= htmlspecialchars($error) ?></li>
+        <?php endforeach; ?>
+    </ul>
+<?php endif; ?>
 <div class="flex items-center justify-center border">
     <form action="/register" method="post" class="flex flex-col gap-5 w-200 place-content-center">
         <label>First Name
-            <input type="text" value="Maksym" required maxlength="100" class="border rounded-xl">
+            <input type="text" value="" name="first_name" class="border rounded-xl">
         </label>
         <label>Last Name
-            <input type="text" value="Chahin" required maxlength="100" class="border rounded-xl">
+            <input type="text" value="Chahin" name="last_name" required maxlength="100" class="border rounded-xl">
         </label>
         <label>Birthdate
-            <input type="date" value="2004-12-21" required class="border rounded-xl">
+            <input type="date" value="2004-12-21" name="birthdate" required class="border rounded-xl">
         </label>
         <label>Report subject
-            <input type="text" value="Testing" required maxlength="255" class="border rounded-xl">
+            <input type="text" value="Testing" name="report_subject" required maxlength="255" class="border rounded-xl">
         </label>
         <label>Phone
-            <input type="tel" value="15555555555" required maxlength="17" pattern="[1]{1}[0-9]{3}[0-9]{3}[0-9]{4}"
+            <input type="tel" value="15555555555" name="phone" required maxlength="17"
+                   pattern="[1]{1}[0-9]{3}[0-9]{3}[0-9]{4}"
                    class="border rounded-xl">
         </label>
         <label>Country
             <select name="country" class="border rounded-xl">
+                <option value="" selected>Choose country</option>
                 <?php foreach ($countries as $country)
                     echo "<option value='$country[name]'>$country[name]</option>"
                 ?>
             </select>
         </label>
         <label>Email
-            <input type="email" value="xackiiiii@gmail.com" required class="border rounded-xl w-30">
+            <input type="email" value="xackiiiii@gmail.com" name="email" required class="border rounded-xl w-30">
         </label>
         <div class="justify-end">
             <button type="submit" class="border rounded-md w-30 flex">Register</button>
