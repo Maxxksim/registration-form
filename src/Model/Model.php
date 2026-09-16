@@ -18,8 +18,8 @@ class Model
         $fields = array_keys($data);
         $columns = implode(', ', $fields);
         $binds = implode(', ', array_map(fn($field) => ":$field", $fields));
-        $sql = "INSERT INTO $table ($columns) VALUES $binds";
+        $sql = "INSERT INTO $table ($columns) VALUES ($binds)";
         $stmt = $this->db->pdo->prepare($sql);
-        $stmt->execute();
+        $stmt->execute($data);
     }
 }
