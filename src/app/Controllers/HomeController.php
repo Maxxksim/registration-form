@@ -11,6 +11,8 @@ class HomeController extends Controller
 {
     public function index(): void
     {
-        $this->view->view('home', ['countries' => $this->countries]);
+        $errors = $_SESSION['errors'] ?? null;
+        unset($_SESSION['errors']);
+        $this->view->view('step1', ['countries' => $this->countries, 'errors' => $errors]);
     }
 }

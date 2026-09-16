@@ -34,35 +34,47 @@ if (!empty($errors)): ?>
 <div class="flex items-center justify-center border">
     <form action="/register" method="post" class="flex flex-col gap-5 w-200 place-content-center">
         <label>First Name
-            <input type="text" value="" name="first_name" class="border rounded-xl">
+            <input type="text" value="<?= htmlspecialchars($session['old_data']['first_name'] ?? '') ?>"
+                   required name="first_name" class="border rounded-xl">
         </label>
         <label>Last Name
-            <input type="text" value="Chahin" name="last_name" required maxlength="100" class="border rounded-xl">
+            <input type="text" value="<?= htmlspecialchars($session['old_data']['last_name'] ?? '') ?>" name="last_name"
+                   required maxlength="100" class="border rounded-xl">
         </label>
         <label>Birthdate
-            <input type="date" value="2004-12-21" name="birthdate" required class="border rounded-xl">
+            <input type="date" value="<?= htmlspecialchars($session['old_data']['birthdate'] ?? '') ?>" name="birthdate"
+                   required class="border rounded-xl">
         </label>
         <label>Report subject
-            <input type="text" value="Testing" name="report_subject" required maxlength="255" class="border rounded-xl">
+            <input type="text" value="<?= htmlspecialchars($session['old_data']['report_subject'] ?? '') ?>"
+                   name="report_subject" required maxlength="255" class="border rounded-xl">
         </label>
         <label>Phone
-            <input type="tel" value="15555555555" name="phone" required maxlength="17"
+            <input type="tel" value="<?= htmlspecialchars($session['old_data']['phone'] ?? '') ?>" name="phone" required
+                   maxlength="17"
                    pattern="[1]{1}[0-9]{3}[0-9]{3}[0-9]{4}"
                    class="border rounded-xl">
         </label>
         <label>Country
             <select name="country" class="border rounded-xl">
-                <option value="" selected>Choose country</option>
+                <option value="<?= htmlspecialchars($session['old_data']['country'] ?? '') ?>" selected>Choose country
+                </option>
                 <?php foreach ($countries as $country)
                     echo "<option value='$country[name]'>$country[name]</option>"
                 ?>
             </select>
         </label>
         <label>Email
-            <input type="email" value="xackiiiii@gmail.com" name="email" required class="border rounded-xl w-30">
+            <input type="email" value="<?= htmlspecialchars($session['old_data']['email'] ?? '') ?>" name="email"
+                   required class="border rounded-xl w-30">
         </label>
         <div class="justify-end">
-            <button type="submit" class="border rounded-md w-30 flex">Register</button>
+            <button type="submit" formaction="/register" class="border rounded-md w-30 flex">
+                Register
+            </button>
+            <button type="submit" formaction="/update" formmethod="post" class="border rounded-md w-30 flex">
+                Update
+            </button>
         </div>
 
     </form>
