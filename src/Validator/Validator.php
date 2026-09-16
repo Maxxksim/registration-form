@@ -16,7 +16,7 @@ class Validator
 
     }
 
-    public function validate(array $fields, array $rules): array
+    public function validate(array $data, array $rules): array
     {
         $errors = [];
 
@@ -25,16 +25,16 @@ class Validator
                 [$type, $params] = array_pad(explode(':', $rule, 2), 2, null);
 
                 $error = match ($type) {
-                    'required' => trim((string)($fields[$field] ?? '')) === '' ? "Field $field is required." : null,
-                    'file' => !is_file($fields[$field]) ? "Field $field must be file." : null,
-                    'type' => !$this->validateFileType($fields[$field], explode(',', $params)) ? "File has invalid type." : null,
-                    'size' => $this->validateFileSize($fields[$field], (int)$params) ? "File is too large." : null,
-                    'length' => mb_strlen($fields[$field]) !== (int)$params ? "Must have $params chars." : null,
-                    'min' => mb_strlen($fields[$field]) < (int)$params ? "Must have more than $params chars." : null,
-                    'max' => mb_strlen($fields[$field]) > (int)$params ? "Must have less than $params chars." : null,
-                    'string' => !is_string($fields[$field]) ? "Field $field must be string." : null,
-                    'unique' => $this->validateUnique($field, $fields[$field]) ? "Field $field must be unique." : null,
-                    'email' => !filter_var($fields[$field], FILTER_VALIDATE_EMAIL) ? "Field $field must be email." : null,
+                    'required' => trim((string)($data[$field] ?? '')) === '' ? "Field $field is required." : null,
+                    'file' => !is_file($data[$field]['tmp_name']) ? "Field $field must be file." : null,
+                    'type' => !$this->validateFileType($data[$field]['tmp_name'], explode(',', $params)) ? "File has invalid type." : null,
+                    'size' => $this->validateFileSize($data[$field]['tmp_name'], (int)$params) ? "File is too large." : null,
+                    'length' => mb_strlen($data[$field]) !== (int)$params ? "Must have $params chars." : null,
+                    'min' => mb_strlen($data[$field]) < (int)$params ? "Must have more than $params chars." : null,
+                    'max' => mb_strlen($data[$field]) > (int)$params ? "Must have less than $params chars." : null,
+                    'string' => !is_string($data[$field]) ? "Field $field must be string." : null,
+                    'unique' => $this->validateUnique($field, $data[$field]) ? "Field $field must be unique." : null,
+                    'email' => !filter_var($data[$field], FILTER_VALIDATE_EMAIL) ? "Field $field must be email." : null,
                     default => null,
                 };
 
@@ -45,7 +45,7 @@ class Validator
             }
         }
 
-        return $errors;
+        return ['validatedData' => $data, 'errors' => $errors];
     }
 
     private function validateUnique(string $field, string $value): bool
