@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Src\Routing;
 
 use League\ISO3166\ISO3166;
+use Src\Request\Request;
 use Src\Validator\Validator;
 use Src\View\View;
 
@@ -12,7 +13,7 @@ class Router
 {
     private array $routes = [];
 
-    public function __construct(private View $view, private ISO3166 $countries, private Validator $validator)
+    public function __construct(private View $view, private ISO3166 $countries, private Request $request)
     {
         $this->initRoutes();
     }
@@ -20,20 +21,18 @@ class Router
     public function startRouter(): void
     {
 
-        if (!$route = $this->findRoute($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI'])) {
+        if (!$route = $this->findRoute($this->request->getRequestMethod(), $this->request->getRequestUri())) {
             echo '404';
             exit;
         }
 
         if (is_array($route->getCallback())) {
             [$controller, $callback] = $route->getCallback();
-            $controller = new $controller($this->view, $this->countries, $this->validator);
+            $controller = new $controller($this->view, $this->countries, $this->request->validator, $this->request);
             $controller->$callback();
         } else {
             $route->getCallback()();
         }
-
-
     }
 
     private function initRoutes(): void
