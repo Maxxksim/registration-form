@@ -26,9 +26,9 @@ class Validator
 
                 $error = match ($type) {
                     'required' => trim((string)($data[$field] ?? '')) === '' ? "Field $field is required." : null,
-                    'file' => !is_file($data[$field]['tmp_name']) ? "Field $field must be file." : null,
+                    'file' => $this->validateFile($data[$field]['error']) ?? null,
                     'type' => !$this->validateFileType($data[$field]['tmp_name'], explode(',', $params)) ? "File has invalid type." : null,
-                    'size' => $this->validateFileSize($data[$field]['tmp_name'], (int)$params) ? "File is too large." : null,
+                    'size' => $this->validateFileSize($data[$field]['tmp_name'], (int)$params) ? "File is too large. Max $params MB" : null,
                     'length' => mb_strlen($data[$field]) !== (int)$params ? "Must have $params chars." : null,
                     'min' => mb_strlen($data[$field]) < (int)$params ? "Must have more than $params chars." : null,
                     'max' => mb_strlen($data[$field]) > (int)$params ? "Must have less than $params chars." : null,
@@ -60,6 +60,16 @@ class Validator
         }
 
         return false;
+    }
+
+    private function validateFile($error): ?string
+    {
+        return match ($error) {
+            UPLOAD_ERR_OK => null,
+            null => "Field must be a file.",
+            UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE => "File is too large.",
+            default => 'Error to upload this file'
+        };
     }
 
     private function validateFileSize(string $path, int $maxMb): bool
