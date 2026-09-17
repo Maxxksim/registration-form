@@ -21,7 +21,7 @@ class MemberRequest extends Request
             'company' => ['string', 'max:255'],
             'position' => ['string', 'max:255'],
             'about_me' => ['string'],
-            'photo' => ['file', 'type:image/png,image/jpeg,image/webp', 'size:3']
+            'photo' => ['file', 'type:image/png,image/jpeg,image/webp', 'size:1']
         ];
     }
 }

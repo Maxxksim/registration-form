@@ -23,16 +23,17 @@ class Model
         $stmt->execute($data);
     }
 
-    protected function update(string $table, array $data, string $where): void
+    public function update(string $where, string $whereValue, array $data): void
     {
+        $table = static::$table;
         $fieldsFromModel = static::fields();
         $fields = array_keys($data);
         $preparedFields = [];
         $bindValues = [];
         foreach ($fieldsFromModel as $field) {
-            if (in_array($field, $fields)) {
+            if (in_array($field, $fields, true)) {
                 $preparedFields[] = "$field=?";
-                $bindValues[$field] = $data[$field];
+                $bindValues[] = $data[$field];
             }
         }
 
@@ -40,12 +41,12 @@ class Model
             return;
         }
 
-        if (!in_array($where, $fieldsFromModel)) {
+        if (!in_array($where, $fieldsFromModel, true)) {
             return;
         }
 
         $binds = implode(', ', $preparedFields);
-        $bindValues[] = $where;
+        $bindValues[] = $whereValue;
         $sql = "UPDATE $table SET $binds WHERE $where=?";
 
         $stmt = $this->db->pdo->prepare($sql);

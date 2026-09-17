@@ -8,6 +8,8 @@ use Src\Model\Model;
 
 class Member extends Model
 {
+    protected static string $table = 'members';
+
     protected static function fields(): array
     {
         return [

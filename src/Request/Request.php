@@ -33,8 +33,11 @@ class Request
 
     public function validated(): array
     {
-        $fields = array_keys($rules = $this->prepareRules($this->getData()));
-        $preparedData = $this->prepareData($this->getData(), $this->files, $fields);
+        $allRules = static::rules();
+        $fields = array_keys($allRules);
+        $preparedData = $this->removeUnchangedData($this->prepareData($this->getData(), $this->files, $fields));
+        $rules = $this->prepareRules($preparedData);
+
         return $this->validator->validate($preparedData, $rules);
     }
 
@@ -49,7 +52,9 @@ class Request
         }
 
         foreach ($fields as $field) {
-            $preparedData[$field] = $data[$field];
+            if (isset($data[$field])) {
+                $preparedData[$field] = $data[$field];
+            }
         }
 
         return $preparedData;
@@ -65,5 +70,24 @@ class Request
         }
 
         return $rules;
+    }
+
+    private function removeUnchangedData(array $data): array
+    {
+        $oldData = $_SESSION['steps']['data'] ?? [];
+
+        if (isset($_SESSION['steps']['data'])) {
+            foreach ($data as $field => $value) {
+                if (is_array($value)) {
+                    continue;
+                }
+
+                if ($oldData[$field] === $value) {
+                    unset($data[$field]);
+                }
+            }
+        }
+
+        return $data;
     }
 }

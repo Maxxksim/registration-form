@@ -5,16 +5,17 @@ declare(strict_types=1);
 namespace Src\Routing;
 
 use League\ISO3166\ISO3166;
+use Src\Config\Config;
 use Src\Database\Db;
 use Src\Request\Request;
-use Src\Validator\Validator;
+use Src\Storage\Storage;
 use Src\View\View;
 
 class Router
 {
     private array $routes = [];
 
-    public function __construct(private View $view, private ISO3166 $countries, private Request $request, private Db $db)
+    public function __construct(private View $view, private ISO3166 $countries, private Request $request, private Db $db, private Storage $storage, private Config $config)
     {
         $this->initRoutes();
     }
@@ -29,7 +30,7 @@ class Router
 
         if (is_array($route->getCallback())) {
             [$controller, $callback] = $route->getCallback();
-            $controller = new $controller($this->view, $this->countries, $this->request->validator, $this->request, $this->db);
+            $controller = new $controller($this->view, $this->countries, $this->request, $this->db, $this->storage, $this->config);
             $controller->$callback();
         } else {
             $route->getCallback()();

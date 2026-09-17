@@ -5,14 +5,16 @@ declare(strict_types=1);
 namespace Src\Controller;
 
 use League\ISO3166\ISO3166;
+use Src\Config\Config;
 use Src\Database\Db;
 use Src\Request\Request;
+use Src\Storage\Storage;
 use Src\Validator\Validator;
 use Src\View\View;
 
 class Controller
 {
-    public function __construct(protected View $view, protected ISO3166 $countries, protected Validator $validator, protected Request $request, protected Db $db)
+    public function __construct(protected View $view, protected ISO3166 $countries, protected Request $request, protected Db $db, protected Storage $storage, protected Config $config)
     {
 
     }
