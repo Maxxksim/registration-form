@@ -4,15 +4,31 @@ declare(strict_types=1);
 
 namespace Src\app\Controllers;
 
+use Src\app\Models\Member;
+use Src\app\Requests\MemberRequest;
 use Src\Controller\Controller;
-use Src\View\View;
 
 class HomeController extends Controller
 {
+    public function startOver(): void
+    {
+        $memberRequest = new MemberRequest($this->request->validator, $this->request->get, $this->request->post, $this->request->files, $this->request->server);
+        $member = new Member($this->db);
+        $countMembers = count($member->getMembers());
+        $steps = $_SESSION['steps'] ?? ['current' => 'step1'];
+
+        $sharing = [
+            'Facebook' => "https://www.facebook.com/sharer/sharer.php?u={$this->config->config('sharing.url')}",
+            'X' => "https://x.com/intent/tweet?text={$this->config->config('sharing.text')}&url={$this->config->config('sharing.url')}"
+        ];
+
+        $this->view->view('home', ['countries' => $this->countries, 'steps' => $steps, 'countMembers' => $countMembers, 'sharing' => $sharing]);
+    }
+
     public function index(): void
     {
-        $errors = $_SESSION['errors'] ?? null;
-        $steps = $_SESSION['steps'] ?? ['current' => 'step1'];
-        $this->view->view('home', ['countries' => $this->countries, 'errors' => $errors, 'steps' => $steps]);
+        session_destroy();
+
+        $this->redirect('/start');
     }
 }

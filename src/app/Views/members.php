@@ -19,10 +19,12 @@ declare(strict_types=1);
 <?php
 foreach ($members as $member) {
     echo 'full name: ' . htmlspecialchars($member['first_name'] . ' ' . $member['last_name']) . "</br>";
-    echo 'photo: ' . ($member['path_to_photo'] ? htmlspecialchars($member['path_to_photo']) : 'DEFAULT PHOTO') . "</br>";
+    echo "<img src='" . (!empty($member['path_to_photo']) ? '/photos/' . htmlspecialchars($member['path_to_photo']) : '/photos/default.jpg') . "' alt='Photo' width='80' height='80'>" . "</br>";
     echo 'report_subject: ' . htmlspecialchars($member['report_subject']) . "</br>";
     echo "<a href='mailto:" . htmlspecialchars($member['email']) . "'>" . htmlspecialchars($member['email']) . "</a>";
 }
 ?>
+
+
 </body>
 </html>
