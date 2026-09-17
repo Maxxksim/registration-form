@@ -35,6 +35,8 @@ class Validator
                     'string' => !is_string($data[$field]) ? "Field $field must be string." : null,
                     'unique' => $this->validateUnique($field, $data[$field]) ? "Field $field must be unique." : null,
                     'email' => !filter_var($data[$field], FILTER_VALIDATE_EMAIL) ? "Field $field must be email." : null,
+                    'int' => !ctype_digit($data[$field]) ? "Field $field must have only numbers." : null,
+                    'code' => !str_starts_with($data[$field], $params) ? "Field $field must start from $params." : null,
                     default => null,
                 };
 
@@ -80,7 +82,13 @@ class Validator
         return false;
     }
 
-    private function validateFileType(string $path, array $allowedTypes): bool
+    private function validatePhone(string $field, int $countryCode)
+    {
+
+    }
+
+    private
+    function validateFileType(string $path, array $allowedTypes): bool
     {
         $fileInfo = new finfo(FILEINFO_MIME_TYPE);
         $mime = $fileInfo->file($path);

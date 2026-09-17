@@ -15,7 +15,7 @@ class MemberRequest extends Request
             'last_name' => ['required', 'string', 'max:100'],
             'birthdate' => ['required', 'date'],
             'report_subject' => ['required', 'string', 'max:255'],
-            'phone' => ['required', 'length:11'],
+            'phone' => ['required', 'length:11', 'code:1', 'int'],
             'country' => ['required'],
             'email' => ['required', 'email', 'unique'],
             'company' => ['string', 'max:255'],
