@@ -32,7 +32,7 @@ $current = $steps['current'] ?? 'step1';
     <title>Registration Form</title>
 </head>
 
-<body class="flex flex-col items-center p-5 m-5">
+<body class="bg-blue-100">
 
 <div id="step1" class="<?= $current !== 'step1' ? 'hidden' : '' ?>">
     <?php $view->component('step1', ['countries' => $countries, 'steps' => $steps]); ?>

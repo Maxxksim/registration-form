@@ -7,21 +7,24 @@ declare(strict_types=1);
  */
 ?>
 
-<h1>
-    Thanks
-</h1>
-<div>
-    <div>
-        <a href="/members">All members (<?= $countMembers ?>)</a>
-        <a href="/" id="startOver">Start over</a>
+
+<div class="max-w-md mx-auto p-4">
+    <h1 class="text-2xl font-bold mb-6 text-center">
+        Thanks
+    </h1>
+
+    <div class="flex justify-center gap-6 mb-6 text-sm">
+        <a href="/members" class="text-blue-700 hover:underline">All members (<?= $countMembers ?>)</a>
+        <a href="/" id="startOver" class="text-gray-700 hover:underline">Start over</a>
     </div>
-    <ul>
+
+    <ul class="space-y-3">
         <?php foreach ($sharing as $name => $link): ?>
-            <li class="flex items-center gap-2">
-                <span><?= $name ?>:</span>
-                <a href="<?= $link ?>" target="_blank" rel="noopener noreferrer"
-                   class="">
-                    <?= $link ?>
+            <li class="flex flex-col gap-1 border rounded-md p-3">
+                <span class="font-medium text-sm text-black-700"><?= htmlspecialchars($name) ?></span>
+                <a href="<?= htmlspecialchars($link) ?>" target="_blank"
+                   class="text-blue-600 hover:underline break-all text-sm">
+                    <?= htmlspecialchars($link) ?>
                 </a>
             </li>
         <?php endforeach; ?>

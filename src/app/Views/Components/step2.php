@@ -1,37 +1,41 @@
-<div class="flex items-center justify-center border">
-    <form method="post" enctype="multipart/form-data" id="step2-form"
-          class="flex flex-col gap-5 w-200 place-content-center">
-        <label>Company
-            <input type="text" value="<?= htmlspecialchars($steps['data']['company'] ?? '') ?>"
-                   name="company" class="border rounded-md w-70">
-            <p class="hidden text-red-700" id="company_error"></p>
-        </label>
-        <label>Position
-            <input type="text" value="<?= htmlspecialchars($steps['data']['position'] ?? '') ?>"
-                   name="position"
-                   class="border rounded-md w-70">
-            <p class="hidden text-red-700" id="position_error"></p>
-        </label>
+<form method="post" enctype="multipart/form-data" id="step2-form"
+      class="max-w-md mx-auto flex flex-col gap-4 p-4">
 
-        <label for="About me">About me
-            <textarea name="about_me" id="about_me" class="border" cols="40"
-                      rows="5">
-                <?= htmlspecialchars($steps['data']['about_me'] ?? '') ?>
-            </textarea>
-        </label>
-        <p class="hidden text-red-700" id="about_me_error"></p>
-        <label>Photo
-            <input type="file" name="photo" accept="image/png, image/jpeg, image/webp">
-            <p class="hidden text-red-700" id="photo_error"></p>
-        </label>
-        <div class="justify-end">
-            <button type="button" formaction="/update" formmethod="post" class="border rounded-md w-30 flex">
-                Update
-            </button>
-        </div>
-    </form>
-    <button class="border" id="backBtn">Back</button>
-    <button class="border" id="finishBtn">Finish</button>
-</div>
+    <div class="flex flex-col gap-1">
+        <label for="company" class="text-sm font-medium">Company</label>
+        <input type="text" id="company" name="company"
+               value="<?= htmlspecialchars($steps['data']['company'] ?? '') ?>"
+               class="border rounded-md w-full px-3 py-2">
+        <p class="hidden text-red-700 text-sm" id="company_error"></p>
+    </div>
 
+    <div class="flex flex-col gap-1">
+        <label for="position" class="text-sm font-medium">Position</label>
+        <input type="text" id="position" name="position"
+               value="<?= htmlspecialchars($steps['data']['position'] ?? '') ?>"
+               class="border rounded-md w-full px-3 py-2">
+        <p class="hidden text-red-700 text-sm" id="position_error"></p>
+    </div>
 
+    <div class="flex flex-col gap-1">
+        <label for="about_me" class="text-sm font-medium">About me</label>
+        <textarea name="about_me" id="about_me" rows="5"
+                  class="border rounded-md w-full px-3 py-2"><?= htmlspecialchars($steps['data']['about_me'] ?? '') ?></textarea>
+        <p class="hidden text-red-700 text-sm" id="about_me_error"></p>
+    </div>
+
+    <div class="flex flex-col gap-1">
+        <label for="photo" class="text-sm font-medium">Photo</label>
+        <input type="file" id="photo" name="photo" accept="image/png, image/jpeg, image/webp"
+               class="border rounded-md w-full px-3 py-2 hover:file:bg-gray-300">
+        <p class="hidden text-red-700 text-sm" id="photo_error"></p>
+    </div>
+
+    <div class="flex gap-3">
+        <button type="button" id="backBtn"
+                class="border rounded-md w-full px-3 py-2 hover:bg-gray-300">Back</button>
+        <button type="button" id="finishBtn"
+                class="border rounded-md w-full px-3 py-2 hover:bg-gray-300">Finish</button>
+    </div>
+
+</form>
