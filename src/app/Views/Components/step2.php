@@ -1,6 +1,6 @@
 <form method="post" enctype="multipart/form-data" id="step2-form"
       class="max-w-md mx-auto flex flex-col gap-4 p-4">
-
+    <input type="hidden" name="csrf_token" id="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
     <div class="flex flex-col gap-1">
         <label for="company" class="text-sm font-medium">Company</label>
         <input type="text" id="company" name="company"
@@ -33,9 +33,11 @@
 
     <div class="flex gap-3">
         <button type="button" id="backBtn"
-                class="border rounded-md w-full px-3 py-2 hover:bg-gray-300">Back</button>
+                class="border rounded-md w-full px-3 py-2 hover:bg-gray-300">Back
+        </button>
         <button type="button" id="finishBtn"
-                class="border rounded-md w-full px-3 py-2 hover:bg-gray-300">Finish</button>
+                class="border rounded-md w-full px-3 py-2 hover:bg-gray-300">Finish
+        </button>
     </div>
 
 </form>

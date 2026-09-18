@@ -2,19 +2,24 @@
 
 declare(strict_types=1);
 
-session_start();
-
-require __DIR__ . '/../vendor/autoload.php';
-
 use Dotenv\Dotenv;
 use League\ISO3166\ISO3166;
 use Src\Config\Config;
+use Src\CSRF\CSRFToken;
 use Src\Database\Db;
 use Src\Request\Request;
 use Src\Routing\Router;
 use Src\Storage\Storage;
 use Src\Validator\Validator;
 use Src\View\View;
+
+require __DIR__ . '/../vendor/autoload.php';
+
+session_start();
+
+$csrfToken = new CSRFToken();
+$csrfToken->generateToken();
+$csrfToken->checkAccess();
 
 $dotenv = Dotenv::createImmutable(__DIR__ . '/..');
 $dotenv->load();

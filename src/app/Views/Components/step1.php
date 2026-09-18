@@ -18,6 +18,7 @@ declare(strict_types=1);
 <form method="post"
       class="max-w-md mx-auto flex flex-col gap-4 p-4"
       id="step1-form">
+    <input type="hidden" name="csrf_token" id="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
     <div class="relative z-0 w-full mb-6 group"><label class="text-sm font-medium">First Name
             <input type="text" value="<?= htmlspecialchars($steps['data']['first_name'] ?? '') ?>"
                    required name="first_name" class="border rounded-md w-full px-3 py-2">

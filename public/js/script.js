@@ -23,9 +23,13 @@ function getForm(formId) {
 }
 
 async function request(url, formData) {
-
+    const csrfToken = document.getElementById('csrf_token').value;
     const response = await fetch(url, {
         method: 'POST',
+        headers: {
+            'X-CSRF-Token': csrfToken,
+            'Content-Type': 'application/json'
+        },
         body: formData,
     })
 
