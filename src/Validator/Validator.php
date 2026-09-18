@@ -21,8 +21,13 @@ class Validator
         $errors = [];
 
         foreach ($rules as $field => $ruleSet) {
+
             foreach ($ruleSet as $rule) {
                 [$type, $params] = array_pad(explode(':', $rule, 2), 2, null);
+
+                if (in_array($type, ['type', 'size'], true) && isset($errors[$field])) {
+                    continue;
+                }
 
                 $error = match ($type) {
                     'required' => trim((string)($data[$field] ?? '')) === '' ? "Field $field is required." : null,
@@ -63,7 +68,6 @@ class Validator
 
         return false;
     }
-
     private function validateFile($error): ?string
     {
         return match ($error) {
@@ -73,7 +77,6 @@ class Validator
             default => 'Error to upload this file'
         };
     }
-
     private function validateFileSize(string $path, int $maxMb): bool
     {
         if (filesize($path) > $maxMb * 1024 * 1024) {
@@ -81,14 +84,7 @@ class Validator
         }
         return false;
     }
-
-    private function validatePhone(string $field, int $countryCode)
-    {
-
-    }
-
-    private
-    function validateFileType(string $path, array $allowedTypes): bool
+    private function validateFileType(string $path, array $allowedTypes): bool
     {
         $fileInfo = new finfo(FILEINFO_MIME_TYPE);
         $mime = $fileInfo->file($path);

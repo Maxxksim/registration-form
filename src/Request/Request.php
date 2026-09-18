@@ -44,7 +44,7 @@ class Request
     private function prepareData(array $data, array $files, array $fields): array
     {
         $preparedData = [];
-        $uploadedFileKey = array_key_first(array_filter($files, fn($file) => $file['error'] === UPLOAD_ERR_OK));
+        $uploadedFileKey = array_key_first(array_filter($files, fn($file) => $file['error'] !== UPLOAD_ERR_NO_FILE));
 
         if ($uploadedFileKey) {
             unset($fields[$uploadedFileKey]);
