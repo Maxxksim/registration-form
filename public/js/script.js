@@ -1,3 +1,4 @@
+
 const map = L.map('map').setView([34.10114, -118.34376], 80);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -10,12 +11,6 @@ marker.bindTooltip('7060 Hollywood Blvd, Los Angeles, CA', {
     direction: 'top'
 }).openTooltip();
 
-function addEventListener(id, event, callback) {
-    const element = document.getElementById(id);
-    if (element) {
-        element.addEventListener(event, callback);
-    }
-}
 
 function getForm(formId) {
     const form = document.getElementById(formId);
@@ -47,22 +42,22 @@ function switchSteps(step) {
     document.getElementById(step).classList.remove('hidden');
 }
 
-addEventListener('finishBtn', 'click', async function () {
+document.getElementById('finishBtn').addEventListener('click', async function () {
     const result = await request('/register/next', getForm('step2-form'));
     document.getElementById('countMembers').textContent = `All members (${result.countMembers})`;
     switchSteps(result.nextStep);
 });
-
-addEventListener('nextBtn', 'click', async function () {
+document.getElementById('nextBtn').addEventListener('click', async function () {
     clearError();
 
     const result = await request('/register/next', getForm('step1-form'));
     if (result) {
         switchSteps(result.nextStep);
     }
+
 });
 
-addEventListener('backBtn', 'click', async function () {
+document.getElementById('backBtn').addEventListener('click', async function () {
     clearError();
     const response = await fetch('/register/back', {method: 'GET'});
     const result = await response.json();
@@ -84,3 +79,16 @@ function showErrors(errors) {
         element.classList.remove('hidden');
     }
 }
+
+document.querySelectorAll('input,textarea,select').forEach(element => {
+    element.addEventListener('change', function (el) {
+        const field = el.target.name;
+        const errorElement = document.getElementById(`${field}_error`);
+        if (errorElement) {
+            errorElement.textContent = '';
+            errorElement.classList.add('hidden');
+        }
+    });
+});
+
+
