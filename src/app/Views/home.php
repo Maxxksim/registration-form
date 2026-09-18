@@ -11,7 +11,7 @@ declare(strict_types=1);
  *
  */
 
-$current = $steps['current'] ?? 'step1';
+$current = $steps['current'];
 ?>
 
 <!doctype html>

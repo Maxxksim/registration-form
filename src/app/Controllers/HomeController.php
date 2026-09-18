@@ -12,10 +12,10 @@ class HomeController extends Controller
 {
     public function startOver(): void
     {
-        $memberRequest = new MemberRequest($this->request->validator, $this->request->get, $this->request->post, $this->request->files, $this->request->server);
         $member = new Member($this->db);
         $countMembers = count($member->getMembers());
-        $steps = $_SESSION['steps'] ?? ['current' => 'step1'];
+        $_SESSION['steps']['current'] = $this->steps[0];
+        $steps = $_SESSION['steps'];
 
         $sharing = [
             'Facebook' => "https://www.facebook.com/sharer/sharer.php?u={$this->config->config('sharing.url')}",

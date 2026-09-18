@@ -24,6 +24,12 @@ class MemberController extends Controller
         }
 
         if (isset($_SESSION['steps']['data'])) {
+
+            if (isset($validatedData['photo'])) {
+                $pathToPhoto = $this->storage->saveUploadedFile($validatedData['photo']);
+                $validatedData = array_merge($validatedData, ['path_to_photo' => $pathToPhoto]);
+            }
+
             $member->update('email', $_SESSION['steps']['data']['email'], $validatedData);
             $_SESSION['steps']['data'] = array_merge($_SESSION['steps']['data'], $validatedData);
         } else {
@@ -43,9 +49,10 @@ class MemberController extends Controller
 
     public function backStep(): void
     {
-        $_SESSION['steps']['current'] = 'step1';
+        $step = $this->getStep('back');
+
         http_response_code(200);
-        echo json_encode(['backStep' => 'step1']);
+        echo json_encode(['backStep' => $step]);
     }
 
     public function nextStep(): void
@@ -55,58 +62,30 @@ class MemberController extends Controller
             return;
         }
 
-        $_SESSION['steps']['current'] = 'step2';
+        $step = $this->getStep('next');
+
         http_response_code(200);
-        echo json_encode(['nextStep' => 'step2']);
+        echo json_encode(['nextStep' => $step]);
     }
 
-    public function update(): void
+    private function getStep(string $where): string
     {
-        $memberRequest = new MemberRequest($this->request->validator, $this->request->get, $this->request->post, $this->request->files, $this->request->server);
-        $member = new Member($this->db);
+        $currentStep = array_search($_SESSION['steps']['current'], $this->steps, true);
 
-        $result = $memberRequest->validated();
-        $validatedData = $result['validatedData'];
-
-        if (!isset($_SESSION['steps'])) {
+        if ($currentStep === false) {
             http_response_code(400);
-            echo json_encode(['errors' => ['update' => 'You have to be registered']]);
-            return;
+            echo json_encode(['errors' => ['step' => 'No step available.']]);
+            exit();
         }
 
-        $_SESSION['steps']['data'] = array_merge($_SESSION['steps']['data'], $validatedData);
-
-        if ($errors = $result['errors']) {
-            http_response_code(422);
-            echo json_encode(['errors' => $errors]);
-            return;
+        if ($where === 'next') {
+            $doStep = $currentStep + 1;
+        } else {
+            $doStep = $currentStep - 1;
         }
 
-        if (isset($validatedData['photo'])) {
-            $pathToPhoto = $this->storage->saveUploadedFile($validatedData['photo']);
-            $validatedData = array_merge($validatedData, ['path_to_photo' => $pathToPhoto]);
-        }
+        $_SESSION['steps']['current'] = $this->steps[$doStep];
 
-        $member->update('email', $_SESSION['steps']['data']['email'], $validatedData);
-        http_response_code(200);
-
-        if ($_SESSION['steps']['current'] == 'step2') {
-            $_SESSION['steps']['current'] = 'stepThanks';
-            echo json_encode(['nextStep' => 'stepThanks']);
-            return;
-        }
-
-        echo json_encode(['message' => 'Member has been updated.']);
-    }
-
-    public function getCountMember(): void
-    {
-        $memberRequest = new MemberRequest($this->request->validator, $this->request->get, $this->request->post, $this->request->files, $this->request->server);
-        $member = new Member($this->db);
-        $countMembers = count($member->getMembers());
-
-        http_response_code(200);
-        echo json_encode(['countMembers' => $countMembers]);
-        return;
+        return $this->steps[$doStep];
     }
 }

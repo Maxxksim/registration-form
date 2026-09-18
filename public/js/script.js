@@ -45,7 +45,7 @@ function switchSteps(step) {
 }
 
 addEventListener('finishBtn', 'click', async function () {
-    const result = await request('/member/update', getForm('step2-form'));
+    const result = await request('/register/next', getForm('step2-form'));
     switchSteps(result.nextStep);
 });
 

@@ -14,6 +14,8 @@ use Src\View\View;
 
 class Controller
 {
+    protected array $steps = ['step1', 'step2', 'stepThanks'];
+
     public function __construct(protected View $view, protected ISO3166 $countries, protected Request $request, protected Db $db, protected Storage $storage, protected Config $config)
     {
 
