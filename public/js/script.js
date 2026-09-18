@@ -1,3 +1,6 @@
+const birthDate = document.getElementById('birthdate');
+
+birthDate.max = new Date().toISOString().split('T')[0];
 
 const map = L.map('map').setView([34.10114, -118.34376], 80);
 

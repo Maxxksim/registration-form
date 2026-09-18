@@ -38,7 +38,7 @@ class Validator
                     'min' => mb_strlen($data[$field]) < (int)$params ? "Must have more than $params chars." : null,
                     'max' => mb_strlen($data[$field]) > (int)$params ? "Must have less than $params chars." : null,
                     'string' => !is_string($data[$field]) ? "Field $field must be string." : null,
-                    'unique' => $this->validateUnique($field, $data[$field]) ? "Field $field must be unique." : null,
+                    'unique' => $this->validateUnique($field, $data[$field]) ? "This $field is already in use." : null,
                     'email' => !filter_var($data[$field], FILTER_VALIDATE_EMAIL) ? "Field $field must be email." : null,
                     'int' => !ctype_digit($data[$field]) ? "Field $field must have only numbers." : null,
                     'code' => !str_starts_with($data[$field], $params) ? "Field $field must start from $params." : null,
