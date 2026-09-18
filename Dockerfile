@@ -18,7 +18,7 @@ COPY . .
 RUN composer dump-autoload --optimize
 
 COPY startserver.sh /usr/local/bin/startserver.sh
-RUN chmod +x /usr/local/bin/startserver.sh
+RUN sed -i 's/\r$//' /usr/local/bin/startserver.sh && chmod +x /usr/local/bin/startserver.sh
 
 EXPOSE 8000
 ENTRYPOINT ["/usr/local/bin/startserver.sh"]
