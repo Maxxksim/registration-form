@@ -12,5 +12,4 @@ return [
     Route::get('/members', [MemberController::class, 'index']),
     Route::get('/register/back', [MemberController::class, 'backStep']),
     Route::post('/register/next', [MemberController::class, 'nextStep']),
-    Route::post('/member/update', [MemberController::class, 'update']),
 ];
