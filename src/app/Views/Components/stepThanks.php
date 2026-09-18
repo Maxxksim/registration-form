@@ -14,7 +14,7 @@ declare(strict_types=1);
     </h1>
 
     <div class="flex justify-center gap-6 mb-6 text-sm">
-        <a href="/members" class="text-blue-700 hover:underline">All members (<?= $countMembers ?>)</a>
+        <a href="/members" class="text-blue-700 hover:underline" id="countMembers">All members (<?= $countMembers ?>)</a>
         <a href="/" id="startOver" class="text-gray-700 hover:underline">Start over</a>
     </div>
 

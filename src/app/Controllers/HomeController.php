@@ -14,7 +14,9 @@ class HomeController extends Controller
     {
         $member = new Member($this->db);
         $countMembers = count($member->getMembers());
-        $_SESSION['steps']['current'] = $this->steps[0];
+        if (!isset($_SESSION['steps']['current'])) {
+            $_SESSION['steps']['current'] = $this->steps[0];
+        }
         $steps = $_SESSION['steps'];
 
         $sharing = [

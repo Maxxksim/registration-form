@@ -46,6 +46,7 @@ function switchSteps(step) {
 
 addEventListener('finishBtn', 'click', async function () {
     const result = await request('/register/next', getForm('step2-form'));
+    document.getElementById('countMembers').textContent = `All members (${result.countMembers})`;
     switchSteps(result.nextStep);
 });
 

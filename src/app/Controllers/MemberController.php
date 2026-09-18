@@ -64,8 +64,14 @@ class MemberController extends Controller
 
         $step = $this->getStep('next');
 
+        $response = ['nextStep' => $step];
+        if ($step === 'stepThanks') {
+            $member = new Member($this->db);
+            $response['countMembers'] = count($member->getMembers());
+        }
+
         http_response_code(200);
-        echo json_encode(['nextStep' => $step]);
+        echo json_encode($response);
     }
 
     private function getStep(string $where): string
