@@ -26,6 +26,10 @@ services:
       - .env
     ports:
       - "${SERVER_PORT}:8000"
+    volumes:
+      - .:/var/www/html
+      - vendor:/var/www/html/vendor
 
 volumes:
   db_data:
+  vendor:
