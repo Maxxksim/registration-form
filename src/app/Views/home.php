@@ -45,7 +45,7 @@ $current = $steps['current'] ?? 'step1';
     <?php $view->component('stepThanks', ['countMembers' => $countMembers, 'sharing' => $sharing]); ?>
 </div>
 
-<script src="script.js"></script>
+<script src="/js/script.js"></script>
 </body>
 </html>
 
