@@ -16,8 +16,19 @@ class MemberStepOneRequest extends Request
             'birthdate' => ['required', 'date'],
             'report_subject' => ['required', 'string', 'max:255'],
             'phone' => ['required', 'length:11', 'country-code:1', 'int'],
-            'country' => ['required'],
+            'country' => ['required', 'string'],
             'email' => ['required', 'email', 'unique'],
+        ];
+    }
+
+    public static function messages(): array
+    {
+        return [
+            'birthdate.required' => 'Please select your birthdate',
+            'country.required' => 'Please select your country',
+            'phone.required' => 'Please enter your phone number',
+            'phone.length' => 'Phone number must be 11 characters',
+            'phone.int' => 'Phone number must contain numbers only'
         ];
     }
 }
