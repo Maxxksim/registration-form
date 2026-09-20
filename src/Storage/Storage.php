@@ -8,7 +8,7 @@ class Storage
 {
     public function generateFileName($extension): string
     {
-        return uniqid((string)rand(), true) . ".$extension";
+        return md5(uniqid((string)rand(), true)) . ".$extension";
     }
 
     public function saveUploadedFile(array $file): ?string

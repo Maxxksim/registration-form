@@ -10,6 +10,6 @@ CREATE TABLE IF NOT EXISTS members
     email          VARCHAR(255) NOT NULL UNIQUE,
     company        VARCHAR(255),
     position       VARCHAR(255),
-    about_me       TEXT,
-    path_to_photo  VARCHAR(255)
+    about_me       VARCHAR(500),
+    path_to_photo  VARCHAR(32)
 )
