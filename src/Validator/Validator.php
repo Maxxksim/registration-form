@@ -49,6 +49,7 @@ class Validator
                     'email' => !filter_var($data[$field], FILTER_VALIDATE_EMAIL) ? 'email' : null,
                     'int' => !ctype_digit($data[$field]) ? 'int' : null,
                     'country-code' => !str_starts_with($data[$field], $params) ? ['country-code', $params] : null,
+                    'date' => !$this->validateDate($data[$field]) ? 'date' : null,
                     default => null,
                 };
 
@@ -79,11 +80,22 @@ class Validator
 
     private function validateFile(string $path): bool
     {
-        if (!is_uploaded_file($path)) {
-            return false;
+        if (is_uploaded_file($path)) {
+            return true;
         }
 
-        return true;
+        return false;
+    }
+
+    private function validateDate(string $date): bool
+    {
+        $result = date_create_from_format('Y-m-d', $date);
+
+        if ($result && $result->format('Y-m-d') === $date) {
+            return true;
+        }
+
+        return false;
     }
 
     private function validateFileSize(string $path, int $maxK): bool
