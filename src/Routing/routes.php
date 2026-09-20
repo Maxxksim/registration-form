@@ -10,6 +10,7 @@ return [
     Route::get('/', [HomeController::class, 'index']),
     Route::get('/start', [HomeController::class, 'startOver']),
     Route::get('/members', [MemberController::class, 'index']),
-    Route::get('/register/back', [MemberController::class, 'backStep']),
-    Route::post('/register/next', [MemberController::class, 'nextStep']),
+    Route::get('/register/steps/back', [MemberController::class, 'backStep']),
+    Route::post('/register/steps/one', [MemberController::class, 'stepOne']),
+    Route::post('/register/steps/two', [MemberController::class, 'stepTwo']),
 ];

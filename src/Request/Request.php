@@ -33,61 +33,31 @@ class Request
 
     public function validated(): array
     {
-        $allRules = static::rules();
-        $fields = array_keys($allRules);
-        $preparedData = $this->removeUnchangedData($this->prepareData($this->getData(), $this->files, $fields));
-        $rules = $this->prepareRules($preparedData);
-
-        return $this->validator->validate($preparedData, $rules);
-    }
-
-    private function prepareData(array $data, array $files, array $fields): array
-    {
-        $preparedData = [];
-        $uploadedFileKey = array_key_first(array_filter($files, fn($file) => $file['error'] !== UPLOAD_ERR_NO_FILE));
-
-        if ($uploadedFileKey) {
-            unset($fields[$uploadedFileKey]);
-            $preparedData[$uploadedFileKey] = $files[$uploadedFileKey];
-        }
-
-        foreach ($fields as $field) {
-            if (isset($data[$field])) {
-                $preparedData[$field] = $data[$field];
-            }
-        }
-
-        return $preparedData;
-    }
-
-    private function prepareRules(array $data): array
-    {
         $rules = static::rules();
-        foreach ($rules as $field => $ruleSet) {
-            if (!isset($data[$field])) {
-                unset($rules[$field]);
-            }
-        }
+        [$preparedData, $preparedRules] = $this->removeUnchangedData(array_merge($this->getData(), $this->files), $rules);
 
-        return $rules;
+        return $this->validator->validate($preparedData, $preparedRules);
     }
 
-    private function removeUnchangedData(array $data): array
+    private function removeUnchangedData(array $data, array $rules): array
     {
         $oldData = $_SESSION['steps']['data'] ?? [];
 
         if (isset($_SESSION['steps']['data'])) {
             foreach ($data as $field => $value) {
-                if (is_array($value)) {
-                    continue;
-                }
+                if (isset($_SESSION['steps']['data'][$field])) {
 
-                if ($oldData[$field] === $value) {
-                    unset($data[$field]);
+                    if (is_array($value)) {
+                        continue;
+                    }
+
+                    if ($oldData[$field] === $value) {
+                        unset($data[$field]);
+                        unset($rules[$field]);
+                    }
                 }
             }
         }
-
-        return $data;
+        return [$data, $rules];
     }
 }

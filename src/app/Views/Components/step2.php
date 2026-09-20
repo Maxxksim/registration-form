@@ -32,10 +32,10 @@
     </div>
 
     <div class="flex gap-3">
-        <button type="button" id="backBtn"
+        <button type="button" id="backStepBtn"
                 class="border rounded-md w-full px-3 py-2 hover:bg-gray-300">Back
         </button>
-        <button type="button" id="finishBtn"
+        <button type="button" id="stepTwoBtn"
                 class="border rounded-md w-full px-3 py-2 hover:bg-gray-300">Finish
         </button>
     </div>

@@ -29,24 +29,32 @@ class Validator
                     continue;
                 }
 
+                if ($type === 'required' && !isset($data[$field])) {
+                    $errors[$field] = 'required';
+                    break;
+                } else if (!isset($data[$field])) {
+                    break;
+                }
+
                 $error = match ($type) {
-                    'required' => trim((string)($data[$field] ?? '')) === '' ? "Field $field is required." : null,
-                    'file' => $this->validateFile($data[$field]['error']) ?? null,
-                    'type' => !$this->validateFileType($data[$field]['tmp_name'], explode(',', $params)) ? "File has invalid type." : null,
-                    'size' => $this->validateFileSize($data[$field]['tmp_name'], (int)$params) ? "File is too large. Max $params MB" : null,
-                    'length' => mb_strlen($data[$field]) !== (int)$params ? "Must have $params chars." : null,
-                    'min' => mb_strlen($data[$field]) < (int)$params ? "Must have more than $params chars." : null,
-                    'max' => mb_strlen($data[$field]) > (int)$params ? "Must have less than $params chars." : null,
-                    'string' => !is_string($data[$field]) ? "Field $field must be string." : null,
-                    'unique' => $this->validateUnique($field, $data[$field]) ? "This $field is already in use." : null,
-                    'email' => !filter_var($data[$field], FILTER_VALIDATE_EMAIL) ? "Field $field must be email." : null,
-                    'int' => !ctype_digit($data[$field]) ? "Field $field must have only numbers." : null,
-                    'code' => !str_starts_with($data[$field], $params) ? "Field $field must start from $params." : null,
+                    'required' => trim($data[$field]) === '' ? 'required' : null,
+                    'file' => !$this->validateFile($data[$field]['tmp_name']) ? 'file' : null,
+                    'type' => !$this->validateFileType($data[$field]['tmp_name'], explode(',', $params)) ? ['type', explode(',', $params)] : null,
+                    'size' => !$this->validateFileSize($data[$field]['tmp_name'], (int)$params) ? ['size', (int)$params] : null,
+                    'length' => mb_strlen($data[$field]) !== (int)$params ? ['length', (int)$params] : null,
+                    'min' => mb_strlen($data[$field]) < (int)$params ? ['min', (int)$params] : null,
+                    'max' => mb_strlen($data[$field]) > (int)$params ? ['max', (int)$params] : null,
+                    'string' => !is_string($data[$field]) ? 'string' : null,
+                    'unique' => $this->validateUnique($data[$field], $field) ? 'unique' : null,
+                    'email' => !filter_var($data[$field], FILTER_VALIDATE_EMAIL) ? 'email' : null,
+                    'int' => !ctype_digit($data[$field]) ? 'int' : null,
+                    'country-code' => !str_starts_with($data[$field], $params) ? ['country-code', $params] : null,
                     default => null,
                 };
 
                 if ($error) {
                     $errors[$field] = $error;
+                    break;
                 }
             }
         }
@@ -54,7 +62,7 @@ class Validator
         return ['validatedData' => $data, 'errors' => $errors];
     }
 
-    private function validateUnique(string $field, string $value): bool
+    private function validateUnique(string $value, string $field): bool
     {
         if (in_array($field, $this->allowedFields)) {
             $stmt = $this->db->pdo->prepare("SELECT * FROM members WHERE $field = :value");
@@ -68,22 +76,24 @@ class Validator
 
         return false;
     }
-    private function validateFile($error): ?string
+
+    private function validateFile(string $path): bool
     {
-        return match ($error) {
-            UPLOAD_ERR_OK => null,
-            null => "Field must be a file.",
-            UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE => "File is too large.",
-            default => 'Error to upload this file'
-        };
-    }
-    private function validateFileSize(string $path, int $maxMb): bool
-    {
-        if (filesize($path) > $maxMb * 1024 * 1024) {
-            return true;
+        if (!is_uploaded_file($path)) {
+            return false;
         }
-        return false;
+
+        return true;
     }
+
+    private function validateFileSize(string $path, int $maxK): bool
+    {
+        if (filesize($path) > $maxK * 1024) {
+            return false;
+        }
+        return true;
+    }
+
     private function validateFileType(string $path, array $allowedTypes): bool
     {
         $fileInfo = new finfo(FILEINFO_MIME_TYPE);

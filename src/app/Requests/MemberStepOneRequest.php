@@ -1,0 +1,23 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Src\app\Requests;
+
+use Src\Request\Request;
+
+class MemberStepOneRequest extends Request
+{
+    public function rules(): array
+    {
+        return [
+            'first_name' => ['required', 'string', 'max:100'],
+            'last_name' => ['required', 'string', 'max:100'],
+            'birthdate' => ['required', 'date'],
+            'report_subject' => ['required', 'string', 'max:255'],
+            'phone' => ['required', 'length:11', 'country-code:1', 'int'],
+            'country' => ['required'],
+            'email' => ['required', 'email', 'unique'],
+        ];
+    }
+}

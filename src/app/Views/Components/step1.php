@@ -75,7 +75,7 @@ declare(strict_types=1);
                required class="border rounded-md w-full px-3 py-2">
         <p class="hidden text-red-700" id="email_error"></p>
     </div>
-    <button id="nextBtn" type="button" class="border rounded-md w-full px-3 py-2 hover:bg-gray-300">Next</button>
+    <button id="stepOneBtn" type="button" class="border rounded-md w-full px-3 py-2 hover:bg-gray-300">Next</button>
 </form>
 
 

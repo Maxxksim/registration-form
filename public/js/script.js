@@ -45,24 +45,24 @@ function switchSteps(step) {
     document.getElementById(step).classList.remove('hidden');
 }
 
-document.getElementById('finishBtn').addEventListener('click', async function () {
-    const result = await request('/register/next', getForm('step2-form'));
+document.getElementById('stepTwoBtn').addEventListener('click', async function () {
+    const result = await request('/register/steps/two', getForm('step2-form'));
     document.getElementById('countMembers').textContent = `All members (${result.countMembers})`;
     switchSteps(result.nextStep);
 });
-document.getElementById('nextBtn').addEventListener('click', async function () {
+document.getElementById('stepOneBtn').addEventListener('click', async function () {
     clearError();
 
-    const result = await request('/register/next', getForm('step1-form'));
+    const result = await request('/register/steps/one', getForm('step1-form'));
     if (result) {
         switchSteps(result.nextStep);
     }
 
 });
 
-document.getElementById('backBtn').addEventListener('click', async function () {
+document.getElementById('backStepBtn').addEventListener('click', async function () {
     clearError();
-    const response = await fetch('/register/back', {method: 'GET'});
+    const response = await fetch('/register/steps/back', {method: 'GET'});
     const result = await response.json();
     switchSteps(result.backStep);
 
