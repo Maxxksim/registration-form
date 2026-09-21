@@ -7,26 +7,26 @@ declare(strict_types=1);
  */
 ?>
 
-
-<div class="w-full mx-auto p-4">
-    <h1 class="text-2xl font-bold mb-6 text-center">
+<div class="mx-auto w-full m-30 p-30 text-center">
+    <h1 class="text-2xl font-bold mb-6 ">
         Thanks
     </h1>
 
-    <div class="flex justify-center gap-6 mb-6 text-sm">
-        <a href="/members" class="text-blue-700 hover:underline" id="countMembers">All members (<?= $countMembers ?>
-            )</a>
-        <a href="/" id="startOver" class="text-gray-700 hover:underline">Start over</a>
-    </div>
-    <div class="flex justify-center flex-col gap-6 mb-6 text-sm w-full">
-            <ul class="space-y-5 space-y-5 flex flex-col items-center">
-                <?php foreach ($shareData as $name => $url): ?>
-                    <button class="hover:bg-gray-300" id="<?= $name ?>Btn">
-                        <li class="flex flex-col gap-1 border rounded-md p-3">
-                            <span><strong><?= htmlspecialchars($name) ?></strong> - <?= htmlspecialchars($url) ?></span>
-                        </li>
-                    </button>
-                <?php endforeach; ?>
-            </ul>
+    <div class="mx-auto grid w-full max-w-xs grid-cols-2 gap-2 text-sm">
+        <a href="/members" class="text-blue-700 hover:underline" id="countMembers">All
+            members
+            (<?= $countMembers ?>)</a>
+        <a href="/" id="startOver" class="text-gray-700 hover:underline">Start
+            over</a>
+
+
+        <a href="https://www.facebook.com/sharer/sharer.php?u=<?= urlencode($shareData['url']) ?>" type="button" class="border rounded-md p-2" target="_blank">Share
+            to
+            Facebook</a>
+
+
+        <a href="https://x.com/intent/tweet?text=<?= urlencode($shareData['text']) ?>&url=<?= urlencode($shareData['url']) ?>"
+           target="_blank" type="button" class="border rounded-md p-2">Share
+            to Twitter</a>
     </div>
 </div>
