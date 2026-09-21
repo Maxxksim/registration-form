@@ -118,7 +118,9 @@ function getFormattedPhoneNumber(phoneNumber) {
 
 document.addEventListener('DOMContentLoaded', function () {
     const element = document.getElementById('phone');
-    element.value = getFormattedPhoneNumber(element.value);
+    if(element.value.trim() !== '') {
+        element.value = getFormattedPhoneNumber(element.value);
+    }
 });
 
 
