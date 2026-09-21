@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Src\Validator;
 
+use DateTime;
 use finfo;
 use Src\Database\Db;
 
@@ -54,7 +55,7 @@ class Validator
                     'int' => !ctype_digit($data[$field]) ? 'int' : null,
                     'country-code' => !str_starts_with($data[$field], $params) ? ['country-code', $params] : null,
                     'date' => !$this->validateDate($data[$field]) ? 'date' : null,
-                    default => null,
+                    'birthdate' => !$this->validateBirthdate($data[$field]) ? 'birthdate' : null,
                 };
 
                 if ($error) {
@@ -80,6 +81,18 @@ class Validator
         }
 
         return false;
+    }
+
+    private function validateBirthdate(string $birthdate): bool
+    {
+        $birthdate = new DateTime($birthdate);
+        $currentDate = new DateTime(date('Y-m-d'));
+
+        if ($birthdate > $currentDate) {
+            return false;
+        }
+
+        return true;
     }
 
     private function validateFile(string $path): bool

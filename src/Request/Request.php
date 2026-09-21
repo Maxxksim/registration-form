@@ -112,6 +112,7 @@ class Request
                     : $param),
             'size' => "$field size must be $param KB or less",
             'country-code' => "Phone number must start with country code +$param",
+            'birthdate' => 'Birth date cannot be in the future'
         };
     }
 }

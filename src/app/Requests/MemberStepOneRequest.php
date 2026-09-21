@@ -13,7 +13,7 @@ class MemberStepOneRequest extends Request
         return [
             'first_name' => ['required', 'string', 'max:100'],
             'last_name' => ['required', 'string', 'max:100'],
-            'birthdate' => ['required', 'date'],
+            'birthdate' => ['required', 'date', 'birthdate'],
             'report_subject' => ['required', 'string', 'max:255'],
             'phone' => ['required', 'length:11', 'country-code:1', 'int'],
             'country' => ['required', 'string'],
