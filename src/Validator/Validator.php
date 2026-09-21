@@ -37,8 +37,8 @@ class Validator
                 }
 
                 $error = match ($type) {
-                    'required' => trim($data[$field]) === '' ? 'required' : null,
-                    'file' => !$this->validateFile($data[$field]['tmp_name']) ? 'file' : null,
+                    'required' => $data[$field] === '' ? 'required' : null,
+                    'file' => $this->validateFile($data[$field]['tmp_name']) ? 'file' : null,
                     'type' => !$this->validateFileType($data[$field]['tmp_name'], explode(',', $params)) ? ['type', explode(',', $params)] : null,
                     'size' => !$this->validateFileSize($data[$field]['tmp_name'], (int)$params) ? ['size', (int)$params] : null,
                     'length' => mb_strlen($data[$field]) !== (int)$params ? ['length', (int)$params] : null,
@@ -80,7 +80,7 @@ class Validator
 
     private function validateFile(string $path): bool
     {
-        if (is_uploaded_file($path)) {
+        if (!is_uploaded_file($path)) {
             return true;
         }
 

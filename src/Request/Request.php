@@ -34,8 +34,7 @@ class Request
     public function validated(): array
     {
         $rules = static::rules();
-        [$preparedData, $preparedRules] = $this->removeUnchangedData(array_merge($this->getData(), $this->files), $rules);
-
+        [$preparedData, $preparedRules] = $this->removeUnchangedData(array_merge($this->getData(), array_filter($this->files, fn($file) => $file['error'] !== UPLOAD_ERR_NO_FILE)), $rules);
         $validatedData = $this->validator->validate($preparedData, $preparedRules);
 
         if (!empty($validatedData['errors'])) {
