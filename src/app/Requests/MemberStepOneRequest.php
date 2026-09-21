@@ -28,7 +28,7 @@ class MemberStepOneRequest extends Request
             'country.required' => 'Please select your country',
             'phone.required' => 'Please enter your phone number',
             'phone.length' => 'Phone number must be 11 characters',
-            'phone.int' => 'Phone number must contain numbers only'
+            'phone.int' => 'Phone number must contain numbers only',
         ];
     }
 }
