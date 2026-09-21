@@ -36,6 +36,10 @@ class Validator
                     break;
                 }
 
+                if (!is_array($data[$field])) {
+                    $data[$field] = trim($data[$field]);
+                }
+
                 $error = match ($type) {
                     'required' => $data[$field] === '' ? 'required' : null,
                     'file' => $this->validateFile($data[$field]['tmp_name']) ? 'file' : null,
