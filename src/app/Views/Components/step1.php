@@ -34,12 +34,13 @@ declare(strict_types=1);
                required maxlength="100" class="border rounded-md w-full px-3 py-2">
         <p class="hidden text-red-700" id="last_name_error"></p>
     </div>
-    <div class="relative z-0 w-full group"><label class="after:ml-1 after:text-red-500 after:content-['*']">Birthdate</label>
+    <div class="relative z-0 w-full group"><label
+                class="after:ml-1 after:text-red-500 after:content-['*']">Birthdate</label>
         <input type="date" value="<?= htmlspecialchars($steps['data']['birthdate'] ?? '') ?>"
                name="birthdate"
                id="birthdate"
-               required class="border rounded-md w-full px-3 py-2">
-        <p class="hidden text-red-700" id="birthdate_error"></p>
+               required class="border rounded-md w-full px-3 py-2 ">
+        <p class="hidden text-red-700 " id="birthdate_error"></p>
     </div>
     <div class="relative z-0 w-full group"><label class="after:ml-1 after:text-red-500 after:content-['*']">Report
             subject</label>
@@ -51,16 +52,14 @@ declare(strict_types=1);
                 class="after:ml-1 after:text-red-500 after:content-['*']">Phone</label>
         <input type="tel" value="<?= htmlspecialchars($steps['data']['phone'] ?? '') ?>" id="phone" name="phone"
                required
-               maxlength="17"
-               pattern="[1]{1}[0-9]{3}[0-9]{3}[0-9]{4}"
-               max="17"
-               placeholder="+1 (555) 555-5555"
+
                class="border rounded-md w-full px-3 py-2">
         <p class="hidden text-red-700" id="phone_error"></p>
     </div>
-    <div class="relative z-0 w-full group"><label class="after:ml-1 after:text-red-500 after:content-['*'] ">Country</label>
+    <div class="relative z-0 w-full group"><label
+                class="after:ml-1 after:text-red-500 after:content-['*'] ">Country</label>
         <select name="country" class="border rounded-md w-full px-3 py-2">
-            <option value="" <?= empty($steps['data']['country']) ? 'selected' : '' ?> disabled>Choose country
+            <option value="" <?= empty($steps['data']['country']) ? 'selected' : '' ?> disabled>Select country
             </option>
             <?php foreach ($countries as $country) { ?>
                 <option value="<?= htmlspecialchars($country['name']) ?>"
@@ -73,13 +72,12 @@ declare(strict_types=1);
     </div>
     <div class="relative z-0 w-full group"><label
                 class="after:ml-1 after:text-red-500 after:content-['*']">Email</label>
-        <input type="email" placeholder="example@domain.com" value="<?= htmlspecialchars($steps['data']['email'] ?? '') ?>" name="email"
+        <input type="email" value="<?= htmlspecialchars($steps['data']['email'] ?? '') ?>" name="email"
                required class="border rounded-md w-full px-3 py-2">
         <p class="hidden text-red-700" id="email_error"></p>
     </div>
     <button id="stepOneBtn" type="button" class="border rounded-md w-full px-3 py-2 hover:bg-gray-300">Next</button>
 </form>
-
 
 
 
