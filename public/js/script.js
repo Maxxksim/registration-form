@@ -122,3 +122,26 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
+async function sharing() {
+    if (document.getElementById('stepThanks').hidden) {
+        return;
+    }
+    const response = await fetch('/sharing', {method: 'GET'});
+    const data = await response.json();
+
+    for (const [id, url] of Object.entries(data.shareData)) {
+        console.log(id, document.getElementById(`${id}Btn`));
+        document.getElementById(`${id}Btn`).addEventListener("click", async () => {
+            await navigator.share({
+                url: url
+            });
+        });
+    }
+}
+
+sharing();
+
+
+
+
+

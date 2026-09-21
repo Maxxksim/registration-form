@@ -19,12 +19,17 @@ class HomeController extends Controller
         }
         $steps = $_SESSION['steps'];
 
-        $sharing = [
+        $shareData = $this->getShareData();
+
+        $this->view->view('home', ['countries' => $this->countries, 'steps' => $steps, 'countMembers' => $countMembers, 'shareData' => $shareData]);
+    }
+
+    private function getShareData(): array
+    {
+        return [
             'Facebook' => "https://www.facebook.com/sharer/sharer.php?u={$this->config->config('sharing.url')}",
             'X' => "https://x.com/intent/tweet?text={$this->config->config('sharing.text')}&url={$this->config->config('sharing.url')}"
         ];
-
-        $this->view->view('home', ['countries' => $this->countries, 'steps' => $steps, 'countMembers' => $countMembers, 'sharing' => $sharing]);
     }
 
     public function index(): void
@@ -32,5 +37,13 @@ class HomeController extends Controller
         session_destroy();
 
         $this->redirect('/start');
+    }
+
+    public function shareData(): void
+    {
+        $shareData = $this->getShareData();
+        http_response_code(200);
+        echo json_encode(['shareData' => $shareData]);
+        exit();
     }
 }
