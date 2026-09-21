@@ -10,7 +10,7 @@ use Src\Database\Db;
 
 class Validator
 {
-    private array $allowedFields = ['firstName', 'lastName', 'birthdate', 'reportSubject', 'country', 'phone', 'email', 'company', 'position', 'aboutMe'];
+    private array $allowedFields = ['first_name', 'last_name', 'birthdate', 'report_subject', 'country', 'phone', 'email', 'company', 'position', 'about_me'];
 
     public function __construct(private Db $db)
     {
