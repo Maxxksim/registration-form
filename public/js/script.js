@@ -52,8 +52,12 @@ document.getElementById('stepTwoBtn').addEventListener('click', async function (
 });
 document.getElementById('stepOneBtn').addEventListener('click', async function () {
     clearError();
-
-    const result = await request('/register/steps/one', getForm('step1-form'));
+    formData = getForm('step1-form');
+    const phone = formData.get('phone')
+    if (phone) {
+        formData.set('phone', phone.replace(/\D/g, ''));
+    }
+    const result = await request('/register/steps/one', formData);
     if (result) {
         switchSteps(result.nextStep);
     }
@@ -92,6 +96,29 @@ document.querySelectorAll('input,textarea,select').forEach(element => {
             errorElement.classList.add('hidden');
         }
     });
+});
+
+document.getElementById('phone').addEventListener('input', function (event) {
+    let value = event.target.value.replace(/\D/g, '');
+    if (value.length > 11) {
+        value = value.slice(0, 11);
+    }
+
+    let formatted = '+1 (';
+    if (value.length > 1) formatted += value.slice(1, 4);
+    if (value.length > 4) formatted += ') ' + value.slice(4, 7);
+    if (value.length > 7) formatted += '-' + value.slice(7, 11);
+
+    event.target.value = formatted;
+});
+
+function getFormattedPhoneNumber(phoneNumber) {
+    return `+${phoneNumber.slice(0, 1)} (${phoneNumber.slice(1, 4)}) ${phoneNumber.slice(4, 7)}-${phoneNumber.slice(7, 11)}`;
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    const element = document.getElementById('phone');
+    element.value = getFormattedPhoneNumber(element.value);
 });
 
 
