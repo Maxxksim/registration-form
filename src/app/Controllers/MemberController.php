@@ -11,36 +11,6 @@ use Src\Controller\Controller;
 
 class MemberController extends Controller
 {
-    /*
-    private function createOrUpdate(): bool
-    {
-        $memberRequest = new MemberStepOneRequest($this->request->validator, $this->request->get, $this->request->post, $this->request->files, $this->request->server);
-        $member = new Member($this->db);
-        $result = $memberRequest->validated();
-        $validatedData = $result['validatedData'];
-
-        if ($errors = $result['errors']) {
-            http_response_code(422);
-            echo json_encode(['errors' => $errors]);
-            return false;
-        }
-
-        if (isset($_SESSION['steps']['data'])) {
-
-            if (isset($validatedData['photo'])) {
-                $pathToPhoto = $this->storage->saveUploadedFile($validatedData['photo']);
-                $validatedData = array_merge($validatedData, ['path_to_photo' => $pathToPhoto]);
-            }
-
-            $member->update('email', $_SESSION['steps']['data']['email'], $validatedData);
-            $_SESSION['steps']['data'] = array_merge($_SESSION['steps']['data'], $validatedData);
-        } else {
-            $member->create($validatedData);
-            $_SESSION['steps']['data'] = array_merge($validatedData);
-        }
-        return true;
-    }
-    */
     public function index(): void
     {
         $member = new Member($this->db);
