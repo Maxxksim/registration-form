@@ -11,5 +11,5 @@ CREATE TABLE IF NOT EXISTS members
     company        VARCHAR(255),
     position       VARCHAR(255),
     about_me       VARCHAR(500),
-    path_to_photo  VARCHAR(32)
+    path_to_photo  VARCHAR(50)
 )
