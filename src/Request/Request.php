@@ -99,7 +99,7 @@ class Request
         return fn(string $field, string $type, mixed $param) => match ($type) {
             'required' => "Please enter your $field",
             'string' => "$field must be text",
-            'email' => 'Please enter a valid email address',
+            'email' => 'Please enter a valid email address, e.g. example@domain.com',
             'unique' => "This $field is already taken",
             'int' => "$field must contain numbers only",
             'date' => 'Please enter a valid date',
