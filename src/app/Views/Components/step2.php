@@ -23,12 +23,17 @@
                   class="border rounded-md w-full px-3 py-2"><?= htmlspecialchars($steps['data']['about_me'] ?? '') ?></textarea>
         <p class="hidden text-red-700 text-sm" id="about_me_error"></p>
     </div>
+    <label for="photo" class="text-sm font-medium">Photo</label>
+    <div class="flex  flex-col gap-1">
+        <div class="relative">
+            <input type="file" id="photo" name="photo" accept="image/png, image/jpeg, image/webp"
+                   class="border rounded-md w-full px-3 py-2  pr-12 hover:file:bg-gray-300">
+            <p class="hidden text-red-700 text-sm" id="photo_error"></p>
 
-    <div class="flex flex-col gap-1">
-        <label for="photo" class="text-sm font-medium">Photo</label>
-        <input type="file" id="photo" name="photo" accept="image/png, image/jpeg, image/webp"
-               class="border rounded-md w-full px-3 py-2 hover:file:bg-gray-300">
-        <p class="hidden text-red-700 text-sm" id="photo_error"></p>
+            <button type="button" id="cancel"
+                    class="hidden absolute right-0.5 rounded  px-3 py-2 hover:bg">✕
+            </button>
+        </div>
     </div>
 
     <div class="flex gap-3">

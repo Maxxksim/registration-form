@@ -118,30 +118,23 @@ function getFormattedPhoneNumber(phoneNumber) {
 
 document.addEventListener('DOMContentLoaded', function () {
     const element = document.getElementById('phone');
-    if(element.value.trim() !== '') {
+    if (element.value.trim() !== '') {
         element.value = getFormattedPhoneNumber(element.value);
     }
 });
 
+document.getElementById('cancel').addEventListener('click', function () {
+    document.getElementById('photo').value = '';
+    document.getElementById('cancel').classList.add('hidden');
+});
 
-async function sharing() {
-    if (document.getElementById('stepThanks').hidden) {
-        return;
+document.getElementById('photo').addEventListener('change', function () {
+    const photoElement = document.getElementById('photo');
+    if (photoElement.value !== '' && photoElement.files.length !== 0) {
+        document.getElementById('cancel').classList.remove('hidden');
     }
-    const response = await fetch('/sharing', {method: 'GET'});
-    const data = await response.json();
+})
 
-    for (const [id, url] of Object.entries(data.shareData)) {
-        console.log(id, document.getElementById(`${id}Btn`));
-        document.getElementById(`${id}Btn`).addEventListener("click", async () => {
-            await navigator.share({
-                url: url
-            });
-        });
-    }
-}
-
-sharing();
 
 
 
