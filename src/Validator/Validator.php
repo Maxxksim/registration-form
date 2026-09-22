@@ -22,7 +22,7 @@ class Validator
 
     }
 
-    public function validate(array $data, array $rules): array
+    public function validate(array $data, array $rules, array $session = []): array
     {
         $errors = [];
 
@@ -58,7 +58,7 @@ class Validator
                     'unique' => $this->validateUnique($data[$field], $field) ? 'unique' : null,
                     'email' => !filter_var($data[$field], FILTER_VALIDATE_EMAIL) ? 'email' : null,
                     'int' => !ctype_digit($data[$field]) ? 'int' : null,
-                    'phone' => !($result = $this->validatePhoneNumber($data[$field], $data['country']))['result'] ? ['phone', $result] : null,
+                    'phone' => !($result = $this->validatePhoneNumber($data[$field], $data['country'] ?? $session['steps']['data']['country']))['result'] ? ['phone', $result] : null,
                     'date' => !$this->validateDate($data[$field]) ? 'date' : null,
                     'birthdate' => !$this->validateBirthdate($data[$field]) ? 'birthdate' : null,
                 };
