@@ -13,7 +13,7 @@ class MemberController extends Controller
 {
     public function index(): void
     {
-        $member = new Member($this->db);
+        $member = new Member($this->db, $this->phoneNumberUtil);
         $members = $member->getMembers();
 
         $this->view->view('members', ['members' => $members]);
@@ -49,7 +49,7 @@ class MemberController extends Controller
     public function stepOne(): void
     {
         $memberRequest = new MemberStepOneRequest($this->request->validator, $this->request->get, $this->request->post, $this->request->files, $this->request->server);
-        $member = new Member($this->db);
+        $member = new Member($this->db, $this->phoneNumberUtil);
         $result = $memberRequest->validated();
         $validatedData = $result['validatedData'];
 
@@ -74,7 +74,7 @@ class MemberController extends Controller
     public function stepTwo(): void
     {
         $memberRequest = new MemberStepTwoRequest($this->request->validator, $this->request->get, $this->request->post, $this->request->files, $this->request->server);
-        $member = new Member($this->db);
+        $member = new Member($this->db, $this->phoneNumberUtil);
 
         $result = $memberRequest->validated();
         $validatedData = $result['validatedData'];

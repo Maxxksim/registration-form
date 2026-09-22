@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Src\app\Models;
 
+use libphonenumber\PhoneNumberFormat;
 use Src\Model\Model;
 
 class Member extends Model
@@ -24,7 +25,7 @@ class Member extends Model
             'last_name' => $data['last_name'],
             'birthdate' => $data['birthdate'],
             'report_subject' => $data['report_subject'],
-            'phone' => $data['phone'],
+            'phone' => $this->phoneNumberUtil->format($data['phone'], PhoneNumberFormat::E164),
             'country' => $data['country'],
             'email' => $data['email'],
         ]);

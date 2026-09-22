@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Dotenv\Dotenv;
 use League\ISO3166\ISO3166;
+use libphonenumber\PhoneNumberUtil;
 use Src\Config\Config;
 use Src\CSRF\CSRFToken;
 use Src\Database\Db;
@@ -27,10 +28,11 @@ $dotenv->load();
 $view = new View();
 $countries = new ISO3166();
 $db = new Db();
-$validator = new Validator($db);
+$phoneNumberUtil = PhoneNumberUtil::getInstance();
+$validator = new Validator($db, $phoneNumberUtil, $countries);
 $request = new Request($validator, $_GET, $_POST, $_FILES, $_SERVER);
 $storage = new Storage();
 $config = new Config();
-$router = new Router($view, $countries, $request, $db, $storage, $config);
+$router = new Router($view, $countries, $request, $db, $storage, $config, $phoneNumberUtil);
 
 $router->startRouter();

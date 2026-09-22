@@ -5,14 +5,18 @@ declare(strict_types=1);
 namespace Src\Validator;
 
 use DateTime;
+use Exception;
 use finfo;
+use League\ISO3166\ISO3166;
+use libphonenumber\PhoneNumberFormat;
+use libphonenumber\PhoneNumberUtil;
 use Src\Database\Db;
 
 class Validator
 {
     private array $allowedFields = ['first_name', 'last_name', 'birthdate', 'report_subject', 'country', 'phone', 'email', 'company', 'position', 'about_me'];
 
-    public function __construct(private Db $db)
+    public function __construct(private Db $db, private PhoneNumberUtil $phoneNumberUtil, private ISO3166 $countries)
     {
 
     }
@@ -53,7 +57,7 @@ class Validator
                     'unique' => $this->validateUnique($data[$field], $field) ? 'unique' : null,
                     'email' => !filter_var($data[$field], FILTER_VALIDATE_EMAIL) ? 'email' : null,
                     'int' => !ctype_digit($data[$field]) ? 'int' : null,
-                    'country-code' => !str_starts_with($data[$field], $params) ? ['country-code', $params] : null,
+                    'phone' => !$this->validatePhoneNumber($data[$field], $data['country']) ? ['phone', $this->getExamplePhoneNumber($data['country'])] : null,
                     'date' => !$this->validateDate($data[$field]) ? 'date' : null,
                     'birthdate' => !$this->validateBirthdate($data[$field]) ? 'birthdate' : null,
                 };
@@ -66,6 +70,29 @@ class Validator
         }
 
         return ['validatedData' => $data, 'errors' => $errors];
+    }
+
+    private function validatePhoneNumber(string $phoneNumber, string $country): bool
+    {
+        $countryData = $this->countries->name(trim($country));
+        try {
+            $parsedNumber = $this->phoneNumberUtil->parse($phoneNumber, $countryData['alpha2']);
+        } catch (Exception $e) {
+            return false;
+        }
+
+        if (!$this->phoneNumberUtil->isValidNumber($parsedNumber)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private function getExamplePhoneNumber($country): string
+    {
+        $countryData = $this->countries->name(trim($country));
+        $example = $this->phoneNumberUtil->getExampleNumber($countryData['alpha2']);
+        return $this->phoneNumberUtil->format($example, PhoneNumberFormat::INTERNATIONAL);
     }
 
     private function validateUnique(string $value, string $field): bool

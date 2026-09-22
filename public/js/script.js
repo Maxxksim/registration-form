@@ -97,32 +97,6 @@ document.querySelectorAll('input,textarea,select').forEach(element => {
         }
     });
 });
-
-document.getElementById('phone').addEventListener('input', function (event) {
-    let value = event.target.value.replace(/\D/g, '');
-    if (value.length > 11) {
-        value = value.slice(0, 11);
-    }
-
-    let formatted = '+1 (';
-    if (value.length > 1) formatted += value.slice(1, 4);
-    if (value.length > 4) formatted += ') ' + value.slice(4, 7);
-    if (value.length > 7) formatted += '-' + value.slice(7, 11);
-
-    event.target.value = formatted;
-});
-
-function getFormattedPhoneNumber(phoneNumber) {
-    return `+${phoneNumber.slice(0, 1)} (${phoneNumber.slice(1, 4)}) ${phoneNumber.slice(4, 7)}-${phoneNumber.slice(7, 11)}`;
-}
-
-document.addEventListener('DOMContentLoaded', function () {
-    const element = document.getElementById('phone');
-    if (element.value.trim() !== '') {
-        element.value = getFormattedPhoneNumber(element.value);
-    }
-});
-
 document.getElementById('cancel').addEventListener('click', function () {
     document.getElementById('photo').value = '';
     document.getElementById('cancel').classList.add('hidden');
@@ -133,8 +107,30 @@ document.getElementById('photo').addEventListener('change', function () {
     if (photoElement.value !== '' && photoElement.files.length !== 0) {
         document.getElementById('cancel').classList.remove('hidden');
     }
-})
+});
 
+const phone = document.getElementById('phone');
+const country = document.getElementById('country');
+const mask = IMask(phone, {mask: '+000000000000000'});
+
+const phoneNumberUtil = libphonenumber.PhoneNumberUtil.getInstance();
+const phoneNumberFormat = libphonenumber.PhoneNumberFormat;
+
+country.addEventListener('change', function (event) {
+    if (event.target.value !== '') {
+        phone.disabled = false;
+        phone.value = '';
+        document.getElementById('phone_hint').hidden = true;
+
+        const selectedCountry = country.selectedOptions[0];
+        const codeSelectedCountry = selectedCountry.dataset.alpha2;
+
+        const example = phoneNumberUtil.getExampleNumber(codeSelectedCountry);
+
+        const formatted = phoneNumberUtil.format(example, phoneNumberFormat.INTERNATIONAL);
+        mask.updateOptions({mask: formatted.replace(/\d/g, '0')});
+    }
+});
 
 
 

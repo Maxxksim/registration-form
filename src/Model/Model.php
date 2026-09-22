@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Src\Model;
 
+use libphonenumber\PhoneNumberUtil;
 use Src\Database\Db;
 
 class Model
 {
-    public function __construct(protected Db $db)
+    public function __construct(protected Db $db, protected PhoneNumberUtil $phoneNumberUtil)
     {
 
     }

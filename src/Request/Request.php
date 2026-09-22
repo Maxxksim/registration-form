@@ -111,7 +111,7 @@ class Request
                     ? implode(', ', array_map(fn($value) => explode('/', $value)[1], $param))
                     : $param),
             'size' => "$field size must be $param KB or less",
-            'country-code' => "Phone number must start with country code +$param",
+            'phone' => "Invalid number. e.g. $param",
             'birthdate' => 'Birth date cannot be in the future'
         };
     }

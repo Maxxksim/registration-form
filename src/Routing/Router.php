@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Src\Routing;
 
 use League\ISO3166\ISO3166;
+use libphonenumber\PhoneNumberUtil;
 use Src\Config\Config;
 use Src\Database\Db;
 use Src\Request\Request;
@@ -15,7 +16,7 @@ class Router
 {
     private array $routes = [];
 
-    public function __construct(private View $view, private ISO3166 $countries, private Request $request, private Db $db, private Storage $storage, private Config $config)
+    public function __construct(private View $view, private ISO3166 $countries, private Request $request, private Db $db, private Storage $storage, private Config $config, private PhoneNumberUtil $phoneNumberUtil)
     {
         $this->initRoutes();
     }
@@ -30,7 +31,7 @@ class Router
 
         if (is_array($route->getCallback())) {
             [$controller, $callback] = $route->getCallback();
-            $controller = new $controller($this->view, $this->countries, $this->request, $this->db, $this->storage, $this->config);
+            $controller = new $controller($this->view, $this->countries, $this->request, $this->db, $this->storage, $this->config, $this->phoneNumberUtil);
             $controller->$callback();
         } else {
             $route->getCallback()();

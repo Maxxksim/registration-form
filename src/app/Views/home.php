@@ -29,7 +29,9 @@ $current = $steps['current'];
             integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
             crossorigin=""></script>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-
+    <script src="/js/phone-examples.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/google-libphonenumber"></script>
+    <script src="https://unpkg.com/imask"></script>
     <title>Registration Form</title>
 </head>
 
