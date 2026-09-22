@@ -19,7 +19,7 @@ RUN composer dump-autoload --optimize
 
 COPY docker/php/custom.ini /usr/local/etc/php/conf.d/custom.ini
 
-COPY ./startserver.sh /usr/local/bin/startserver.sh
+COPY docker/php/startserver.sh /usr/local/bin/startserver.sh
 RUN sed -i 's/\r$//' /usr/local/bin/startserver.sh && chmod +x /usr/local/bin/startserver.sh
 
 EXPOSE 8000
