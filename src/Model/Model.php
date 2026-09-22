@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Src\Model;
 
+use League\ISO3166\ISO3166;
 use libphonenumber\PhoneNumberUtil;
 use Src\Database\Db;
 
 class Model
 {
-    public function __construct(protected Db $db, protected PhoneNumberUtil $phoneNumberUtil)
+    public function __construct(protected Db $db, protected PhoneNumberUtil $phoneNumberUtil, protected ISO3166 $countries)
     {
 
     }

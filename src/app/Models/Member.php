@@ -20,12 +20,15 @@ class Member extends Model
 
     public function create($data): void
     {
+        $countryData = $this->countries->name(trim($data['country']));
+        $phone = $this->phoneNumberUtil->parse($data['phone'], $countryData['alpha2']);
+
         $this->insert('members', [
             'first_name' => $data['first_name'],
             'last_name' => $data['last_name'],
             'birthdate' => $data['birthdate'],
             'report_subject' => $data['report_subject'],
-            'phone' => $this->phoneNumberUtil->format($data['phone'], PhoneNumberFormat::E164),
+            'phone' => $this->phoneNumberUtil->format($phone, PhoneNumberFormat::E164),
             'country' => $data['country'],
             'email' => $data['email'],
         ]);
