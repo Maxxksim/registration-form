@@ -16,8 +16,8 @@ declare(strict_types=1);
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <title>All members</title>
 </head>
-<body class="bg-gray-100">
-<h1 class="text-2xl font-bold mb-4 text-center">All members</h1>
+<body class="bg-blue-200">
+<div class="m-5"><h1 class="text-2xl font-bold mb-4 text-center">All members</h1></div>
 <div class="mx-5 md:mx-10 text-center rounded-md">
     <div class="hidden md:grid grid-cols-4 rounded-md font-semibold mb-5">
         <div class="border m-2 rounded-md bg-white"><h2>Photo</h2></div>

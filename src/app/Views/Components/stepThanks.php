@@ -12,7 +12,7 @@ declare(strict_types=1);
         Thanks
     </h1>
 
-    <div class="mx-auto grid w-full max-w-xs grid-cols-2 gap-2 text-sm">
+    <div class="mx-auto grid w-full max-w-xs grid-cols-2 gap-3 text-sm">
         <a href="/members" class="text-blue-700 hover:underline" id="countMembers">All
             members
             (<?= $countMembers ?>)</a>
@@ -20,13 +20,13 @@ declare(strict_types=1);
             over</a>
 
 
-        <a href="https://www.facebook.com/sharer/sharer.php?u=<?= urlencode($shareData['url']) ?>" type="button" class="border rounded-md p-2" target="_blank">Share
+        <a href="https://www.facebook.com/sharer/sharer.php?u=<?= urlencode($shareData['url']) ?>" type="button" class="border rounded-md w-full p-3" target="_blank">Share
             to
             Facebook</a>
 
 
         <a href="https://x.com/intent/tweet?text=<?= urlencode($shareData['text']) ?>&url=<?= urlencode($shareData['url']) ?>"
-           target="_blank" type="button" class="border rounded-md p-2">Share
+           target="_blank" type="button" class="border rounded-md w-full p-3">Share
             to Twitter</a>
     </div>
 </div>
