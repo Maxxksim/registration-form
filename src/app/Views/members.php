@@ -16,46 +16,64 @@ declare(strict_types=1);
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <title>All members</title>
 </head>
-<body class="bg-blue-200">
-<div class="max-w-4xl mx-auto p-6">
-    <h1 class="text-2xl font-bold mb-4 text-center">All members</h1>
-
-    <table class="w-full border-collapse bg-white shadow-sm rounded-md overflow-hidden">
-        <thead>
-        <tr class="text-left text-sm text-gray-600">
-            <th class="px-3 py-3 text-center">Photo</th>
-            <th class="px-3 py-3 text-center">Full name</th>
-            <th class="px-3 py-3 text-center">Report subject</th>
-            <th class="px-3 py-3 text-center">Email</th>
-        </tr>
-        </thead>
-        <tbody>
+<body class="bg-gray-100">
+<h1 class="text-2xl font-bold mb-4 text-center">All members</h1>
+<div class="mx-5 md:mx-10 text-center rounded-md">
+    <div class="hidden md:grid grid-cols-4 rounded-md font-semibold mb-5">
+        <div class="border m-2 rounded-md bg-white"><h2>Photo</h2></div>
+        <div class="border m-2 rounded-md bg-white"><h2>Full name</h2></div>
+        <div class="border m-2 rounded-md bg-white"><h2>Report subject</h2></div>
+        <div class="border m-2 rounded-md bg-white"><h2>Email</h2></div>
+    </div>
+    <div class="flex flex-col gap-4 md:gap-0">
         <?php foreach ($members as $member): ?>
-            <tr class="border-t text-center">
-                <td class="px-10 py-1">
-                    <img src="<?= !empty($member['path_to_photo'])
-                            ? '/photos/' . htmlspecialchars($member['path_to_photo'])
-                            : '/photos/default.jpg' ?>"
-                         alt="Photo"
-                         class="w-14 h-14 rounded-md">
-                </td>
-                <td class="px-10 py-10 font-medium text-center">
-                    <?= htmlspecialchars($member['first_name'] . ' ' . $member['last_name']) ?>
-                </td>
-                <td class="px-10 py-10 text-gray-700 text-center">
-                    <?= htmlspecialchars($member['report_subject']) ?>
-                </td>
-                <td class="px-10 py-10 text-center">
-                    <a href="mailto:<?= htmlspecialchars($member['email']) ?>"
-                       class="text-blue-500 hover:underline">
-                        <?= htmlspecialchars($member['email']) ?>
-                    </a>
-                </td>
-            </tr>
+            <div class="border rounded m-1">
+                <div class="grid grid-cols-1 rounded-md gap-3 bg-white rounded-md md:rounded-none md:grid-cols-4 md:items-center  md:border-t-0">
+                    <div class="flex items-center gap-3 p-5 md:justify-center">
+                <span class="font-semibold md:hidden">
+                Photo:
+            </span>
+                        <img src="<?= !empty($member['path_to_photo'])
+
+                                ? '/photos/' . htmlspecialchars($member['path_to_photo'])
+                                : '/photos/default.jpg' ?>"
+                             alt="Photo"
+                             class="w-20 h-20 rounded-md">
+                    </div>
+
+                    <div class="p-5">
+                <span class="font-semibold md:hidden">
+                Full name:
+            </span>
+                        <span>
+                <?= htmlspecialchars($member['first_name'] . ' ' . $member['last_name']) ?>
+            </span>
+                    </div>
+
+                    <div>
+            <span class="font-semibold md:hidden">
+                Report subject:
+            </span>
+                        <span>
+                <?= htmlspecialchars($member['report_subject']) ?>
+            </span>
+                    </div>
+
+                    <div>
+            <span class="font-semibold md:hidden">
+                Email:
+            </span>
+                        <span>
+                <a href="mailto:<?= htmlspecialchars($member['email']) ?>"
+                   class="text-blue-500 hover:underline"><?= htmlspecialchars($member['email']) ?></a>
+                </span>
+                    </div>
+
+
+                </div>
+            </div>
         <?php endforeach; ?>
-        </tbody>
-    </table>
-</div>
+    </div>
 
 
 </body>
