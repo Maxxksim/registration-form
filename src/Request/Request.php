@@ -111,8 +111,12 @@ class Request
                     ? implode(', ', array_map(fn($value) => explode('/', $value)[1], $param))
                     : $param),
             'size' => "File size must be $param KB or less",
-            'phone' => "Invalid number. e.g. $param",
-            'birthdate' => 'Birth date cannot be in the future'
+            'birthdate' => 'Birth date cannot be in the future',
+            'phone' => match ($param['typError']) {
+                'format' => "Invalid phone number format, e.g. $param[expectedFormat]",
+                'countryCode' => "Invalid country code, expected $param[expectedCountryCode]",
+                'carrier' => "This carrier code $param[receivedCarrierCode] doesn't exist"
+            }
         };
     }
 }
