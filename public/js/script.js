@@ -33,6 +33,7 @@ async function request(url, formData) {
     const result = await response.json();
     if (response.status === 413) {
         showErrors(result.errors);
+        return;
     }
     if (!response.ok) {
         showErrors(result.errors);
@@ -51,10 +52,10 @@ function switchSteps(step) {
 document.getElementById('stepTwoBtn').addEventListener('click', async function () {
     const result = await request('/register/steps/two', getForm('step2-form'));
     const countMembers = document.getElementById('countMembers');
-    if (countMembers) {
+    if (result) {
         countMembers.textContent = `All members (${result.countMembers})`;
+        switchSteps(result.nextStep);
     }
-    switchSteps(result.nextStep);
 });
 document.getElementById('stepOneBtn').addEventListener('click', async function () {
     clearErrors();
