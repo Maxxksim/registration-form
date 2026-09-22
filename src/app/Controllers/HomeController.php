@@ -12,7 +12,7 @@ class HomeController extends Controller
 {
     public function startOver(): void
     {
-        $member = new Member($this->db);
+        $member = new Member($this->db, $this->phoneNumberUtil);
         $countMembers = count($member->getMembers());
         if (!isset($_SESSION['steps']['current'])) {
             $_SESSION['steps']['current'] = $this->steps[0];
