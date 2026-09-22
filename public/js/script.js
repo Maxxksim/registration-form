@@ -59,10 +59,6 @@ document.getElementById('stepTwoBtn').addEventListener('click', async function (
 document.getElementById('stepOneBtn').addEventListener('click', async function () {
     clearErrors();
     formData = getForm('step1-form');
-    const phone = formData.get('phone')
-    if (phone) {
-        formData.set('phone', phone.replace(/\D/g, ''));
-    }
     const result = await request('/register/steps/one', formData);
     if (result) {
         switchSteps(result.nextStep);
