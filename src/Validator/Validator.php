@@ -112,10 +112,9 @@ class Validator
         return ['result' => true];
     }
 
-    private function getExamplePhoneNumber($country): string
+    private function getExamplePhoneNumber($countryCode): string
     {
-        $countryData = $this->countries->name(trim($country));
-        $example = $this->phoneNumberUtil->getExampleNumber($countryData['alpha2']);
+        $example = $this->phoneNumberUtil->getExampleNumber($countryCode);
         return $this->phoneNumberUtil->format($example, PhoneNumberFormat::INTERNATIONAL);
     }
 

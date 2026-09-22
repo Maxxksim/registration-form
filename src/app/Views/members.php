@@ -27,7 +27,7 @@ declare(strict_types=1);
     </div>
     <div class="flex flex-col gap-4 md:gap-0">
         <?php foreach ($members as $member): ?>
-            <div class="border rounded m-1">
+            <div class="border rounded m-1 break-words">
                 <div class="grid grid-cols-1 rounded-md gap-3 bg-white rounded-md md:rounded-none md:grid-cols-4 md:items-center  md:border-t-0">
                     <div class="flex items-center gap-3 p-5 md:justify-center">
                 <span class="font-semibold md:hidden">
