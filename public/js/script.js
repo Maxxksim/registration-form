@@ -119,6 +119,7 @@ const mask = IMask(phone, {mask: '+000000000000000'});
 
 const phoneNumberUtil = libphonenumber.PhoneNumberUtil.getInstance();
 const phoneNumberFormat = libphonenumber.PhoneNumberFormat;
+const phoneHint = document.getElementById('phone_hint');
 
 country.addEventListener('change', function (event) {
     if (event.target.value !== '') {
@@ -135,6 +136,18 @@ country.addEventListener('change', function (event) {
         mask.updateOptions({mask: formatted.replace(/\d/g, '0')});
     }
 });
+
+if(phone.value !== '' && country.value !== '') {
+    phone.disabled = false;
+    phoneHint.hidden = true
+
+    const selectedCountry = country.selectedOptions[0];
+    const countryCode = selectedCountry.dataset.alpha2;
+
+    const number = phoneNumberUtil.parse(phone.value, countryCode);
+    phone.value = phoneNumberUtil.format(number, phoneNumberFormat.INTERNATIONAL)
+}
+
 
 
 

@@ -28,12 +28,11 @@
         <div class="relative">
             <input type="file" id="photo" name="photo" accept="image/png, image/jpeg, image/webp"
                    class="border rounded-md w-full px-3 py-2  pr-12 hover:file:bg-gray-300">
-            <p class="hidden text-red-700 text-sm" id="photo_error"></p>
-
             <button type="button" id="cancel"
                     class="hidden absolute right-0.5 rounded  px-3 py-2 hover:bg">✕
             </button>
         </div>
+        <p class="hidden text-red-700 text-sm" id="photo_error"></p>
     </div>
 
     <div class="flex gap-3">
