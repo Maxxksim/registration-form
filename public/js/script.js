@@ -50,11 +50,14 @@ function switchSteps(step) {
 
 document.getElementById('stepTwoBtn').addEventListener('click', async function () {
     const result = await request('/register/steps/two', getForm('step2-form'));
-    document.getElementById('countMembers').textContent = `All members (${result.countMembers})`;
+    const countMembers = document.getElementById('countMembers');
+    if (countMembers) {
+        countMembers.textContent = `All members (${result.countMembers})`;
+    }
     switchSteps(result.nextStep);
 });
 document.getElementById('stepOneBtn').addEventListener('click', async function () {
-    clearError();
+    clearErrors();
     formData = getForm('step1-form');
     const phone = formData.get('phone')
     if (phone) {
@@ -68,14 +71,14 @@ document.getElementById('stepOneBtn').addEventListener('click', async function (
 });
 
 document.getElementById('backStepBtn').addEventListener('click', async function () {
-    clearError();
+    clearErrors();
     const response = await fetch('/register/steps/back', {method: 'GET'});
     const result = await response.json();
     switchSteps(result.backStep);
 
 });
 
-function clearError() {
+function clearErrors() {
     document.querySelectorAll('[id$="_error"]').forEach(element => {
         element.textContent = '';
         element.classList.add('hidden');
@@ -103,6 +106,7 @@ document.querySelectorAll('input,textarea,select').forEach(element => {
 document.getElementById('cancel').addEventListener('click', function () {
     document.getElementById('photo').value = '';
     document.getElementById('cancel').classList.add('hidden');
+    clearErrors();
 });
 
 document.getElementById('photo').addEventListener('change', function () {
