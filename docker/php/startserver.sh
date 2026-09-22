@@ -1,3 +1,3 @@
 #!/bin/sh
-php bin/migrate.php
+php /docker/php/startserver.sh
 exec php -S 0.0.0.0:80 -t public

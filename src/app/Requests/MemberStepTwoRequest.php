@@ -12,7 +12,7 @@ class MemberStepTwoRequest extends Request
             'company' => ['string', 'max:255'],
             'position' => ['string', 'max:255'],
             'about_me' => ['string', 'max:500'],
-            'photo' => ['file', 'type:image/png,image/jpeg,image/webp', 'size:1024']
+            'photo' => ['file', 'type:image/png,image/jpeg,image/webp', 'size:3024']
         ];
     }
 }

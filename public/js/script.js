@@ -31,6 +31,9 @@ async function request(url, formData) {
     })
 
     const result = await response.json();
+    if (response.status === 413) {
+        showErrors(result.errors);
+    }
     if (!response.ok) {
         showErrors(result.errors);
         return;

@@ -110,7 +110,7 @@ class Request
             'type' => 'Unsupported file type. Allowed: ' . (is_array($param)
                     ? implode(', ', array_map(fn($value) => explode('/', $value)[1], $param))
                     : $param),
-            'size' => "$field size must be $param KB or less",
+            'size' => "File size must be $param KB or less",
             'phone' => "Invalid number. e.g. $param",
             'birthdate' => 'Birth date cannot be in the future'
         };
