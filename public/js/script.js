@@ -127,6 +127,15 @@ function initInputs() {
         flatPicker = flatpickr("#birthdate", {
             dateFormat: "Y-m-d",
             maxDate: birthdateMax,
+            onChange : function(selectedDates, dateStr, instance) {
+                if(selectedDates > birthdateMax) {
+                    showErrors({
+                        errors : {
+                            "birthdate" : "Birthdate cannot be in the future"
+                        }
+                    })
+                }
+            },
         });
 
         const initialCountryLookup = async () => {
@@ -159,7 +168,6 @@ function initInputs() {
         }
     }
 }
-
 
 document.addEventListener('DOMContentLoaded', initInputs);
 
