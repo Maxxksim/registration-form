@@ -75,13 +75,12 @@ class Validator
 
     private function validatePhoneNumber(string $phoneNumber): bool|array
     {
-
         try {
             $parsedNumber = $this->phoneNumberUtil->parse($phoneNumber);
         } catch (Exception $e) {
             return [
                 'result' => false,
-                'typError' => 'format'
+                'typError' => 'invalid'
             ];
         }
 

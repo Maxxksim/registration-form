@@ -1,7 +1,7 @@
 const birthDate = document.getElementById('birthdate');
 let iti;
 birthDate.max = new Date().toISOString().split('T')[0];
-
+const phone = document.getElementById('phone');
 const map = L.map('map').setView([34.10114, -118.34376], 80);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -64,12 +64,7 @@ document.getElementById('stepOneBtn').addEventListener('click', async function (
     clearErrors();
     const formData = getForm('step1-form');
 
-    if (iti) {
-        await iti.promise;
-
-        const fullNumber = iti.getNumber();
-        formData.set('phone', fullNumber);
-    }
+    formData.set('phone', phone.value);
 
     const result = await request('/register/steps/one', formData);
 
@@ -140,7 +135,6 @@ function initPhoneInput() {
             return data.country_code;
         }
 
-        const phone = document.getElementById('phone');
         if (phone.dataset.itiInitialized) {
             return;
         }
