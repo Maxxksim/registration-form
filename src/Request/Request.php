@@ -102,7 +102,7 @@ class Request
             'email' => 'Please enter a valid email address, e.g. example@domain.com',
             'unique' => "This $field is already taken",
             'int' => "$field must contain numbers only",
-            'date' => 'Please enter a valid date',
+            'date' => 'Please enter a valid date in the format YYYY-MM-DD',
             'file' => 'File upload failed. Please try again',
             'length' => "$field must be $param characters",
             'min' => "$field must be at least $param characters",

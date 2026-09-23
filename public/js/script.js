@@ -1,7 +1,6 @@
-const birthDate = document.getElementById('birthdate');
-let iti;
-birthDate.max = new Date().toISOString().split('T')[0];
+let inputsForInit = null;
 const phone = document.getElementById('phone');
+let iti = null;
 const map = L.map('map').setView([34.10114, -118.34376], 80);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -44,9 +43,6 @@ async function request(url, formData) {
 }
 
 function switchSteps(step) {
-    if (step === 'step1') {
-        initPhoneInput();
-    }
     document.getElementById('step1').classList.add('hidden');
     document.getElementById('step2').classList.add('hidden');
     document.getElementById(step).classList.remove('hidden');
@@ -64,7 +60,7 @@ document.getElementById('stepOneBtn').addEventListener('click', async function (
     clearErrors();
     const formData = getForm('step1-form');
 
-    if(iti) {
+    if (iti) {
         await iti.promise
         const number = iti.getNumber()
         console.log(number);
@@ -125,8 +121,14 @@ document.getElementById('photo').addEventListener('change', function () {
     }
 });
 
-function initPhoneInput() {
-    if (!document.getElementById('step1').classList.contains('hidden')) {
+function initInputs() {
+    if (!inputsForInit) {
+        const birthdateMax = new Date().toISOString().split('T')[0];
+        flatPicker = flatpickr("#birthdate", {
+            dateFormat: "Y-m-d",
+            maxDate: birthdateMax,
+        });
+
         const initialCountryLookup = async () => {
 
             const cachedUserCountry = sessionStorage.getItem('userCountry');
@@ -151,10 +153,15 @@ function initPhoneInput() {
             loadUtils: () =>
                 import('https://cdn.jsdelivr.net/npm/intl-tel-input@29.5.2/dist/js/utils.js'),
         });
+
+        if (phone.value) {
+            iti.setNumber(phone.value);
+        }
     }
 }
 
-document.addEventListener('DOMContentLoaded', initPhoneInput);
+
+document.addEventListener('DOMContentLoaded', initInputs);
 
 
 

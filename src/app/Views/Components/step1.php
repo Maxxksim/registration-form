@@ -37,7 +37,7 @@ declare(strict_types=1);
     </div>
     <div class="relative z-0 w-full group"><label
                 class="after:ml-1 after:text-red-500 after:content-['*']">Birthdate</label>
-        <input type="date" autocomplete="off" value="<?= htmlspecialchars($steps['data']['birthdate'] ?? '') ?>"
+        <input type="text" autocomplete="off" value="<?= htmlspecialchars($steps['data']['birthdate'] ?? '') ?>"
                name="birthdate"
                id="birthdate"
                required class="border rounded-md w-full px-3 py-2 ">

@@ -31,6 +31,8 @@ $current = $steps['current'];
     <script src="https://unpkg.com/imask"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@29.5.2/dist/css/intlTelInput.css">
     <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@29.5.2/dist/js/intlTelInput.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <title>Registration Form</title>
 </head>
 
