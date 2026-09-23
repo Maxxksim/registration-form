@@ -1,5 +1,5 @@
 const birthDate = document.getElementById('birthdate');
-
+let iti;
 birthDate.max = new Date().toISOString().split('T')[0];
 
 const map = L.map('map').setView([34.10114, -118.34376], 80);
@@ -47,6 +47,9 @@ function switchSteps(step) {
     document.getElementById('step1').classList.add('hidden');
     document.getElementById('step2').classList.add('hidden');
     document.getElementById(step).classList.remove('hidden');
+    if (step === 'step1') {
+        initPhoneInput();
+    }
 }
 
 document.getElementById('stepTwoBtn').addEventListener('click', async function () {
@@ -59,10 +62,14 @@ document.getElementById('stepTwoBtn').addEventListener('click', async function (
 });
 document.getElementById('stepOneBtn').addEventListener('click', async function () {
     clearErrors();
-    formData = getForm('step1-form');
+    const formData = getForm('step1-form');
 
-    const fullNumber = iti.getNumber();
-    formData.set('phone', fullNumber);
+    if (iti) {
+        await iti.promise;
+
+        const fullNumber = iti.getNumber();
+        formData.set('phone', fullNumber);
+    }
 
     const result = await request('/register/steps/one', formData);
 
@@ -118,34 +125,41 @@ document.getElementById('photo').addEventListener('change', function () {
     }
 });
 
+function initPhoneInput() {
+    if (!document.getElementById('step1').classList.contains('hidden')) {
+        const initialCountryLookup = async () => {
 
-const initialCountryLookup = async () => {
+            const cachedUserCountry = sessionStorage.getItem('userCountry');
+            if (cachedUserCountry) {
+                return cachedUserCountry;
+            }
 
-    const cachedUserCountry = sessionStorage.getItem('userCountry');
-    if (cachedUserCountry) {
-        return cachedUserCountry;
+            const res = await fetch("https://ipapi.co/json");
+            const data = await res.json();
+            sessionStorage.setItem('userCountry', data.country_code)
+            return data.country_code;
+        }
+
+        const phone = document.getElementById('phone');
+        if (phone.dataset.itiInitialized) {
+            return;
+        }
+        iti = window.intlTelInput(phone, {
+            initialCountryLookup,
+            classNames: {
+                input: "border rounded-md w-full px-3 py-2",
+                container: "w-full block",
+            },
+            formatAsYouType: true,
+            customPlaceholder: () => 'Enter your number',
+            loadUtils: () =>
+                import('https://cdn.jsdelivr.net/npm/intl-tel-input@29.5.2/dist/js/utils.js'),
+        });
+        phone.dataset.itiInitialized = 'true';
     }
-
-    const res = await fetch("https://ipapi.co/json");
-    const data = await res.json();
-    sessionStorage.setItem('userCountry', data.country_code)
-    return data.country_code;
 }
 
-const phone = document.getElementById('phone');
-
-const iti = window.intlTelInput(phone, {
-    initialCountryLookup,
-    classNames: {
-        input: "border rounded-md w-full px-3 py-2",
-        container: "w-full block",
-    },
-    formatAsYouType: true,
-    customPlaceholder: () => 'Enter your number',
-    loadUtils: () =>
-        import('https://cdn.jsdelivr.net/npm/intl-tel-input@29.5.2/dist/js/utils.js'),
-});
-
+document.addEventListener('DOMContentLoaded', initPhoneInput);
 
 
 
