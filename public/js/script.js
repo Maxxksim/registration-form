@@ -60,7 +60,12 @@ document.getElementById('stepTwoBtn').addEventListener('click', async function (
 document.getElementById('stepOneBtn').addEventListener('click', async function () {
     clearErrors();
     formData = getForm('step1-form');
+
+    const fullNumber = iti.getNumber();
+    formData.set('phone', fullNumber);
+
     const result = await request('/register/steps/one', formData);
+
     if (result) {
         switchSteps(result.nextStep);
     }
@@ -113,40 +118,34 @@ document.getElementById('photo').addEventListener('change', function () {
     }
 });
 
-const phone = document.getElementById('phone');
-const country = document.getElementById('country');
-const mask = IMask(phone, {mask: '+000000000000000'});
 
-const phoneNumberUtil = libphonenumber.PhoneNumberUtil.getInstance();
-const phoneNumberFormat = libphonenumber.PhoneNumberFormat;
-const phoneHint = document.getElementById('phone_hint');
+const initialCountryLookup = async () => {
 
-country.addEventListener('change', function (event) {
-    if (event.target.value !== '') {
-        phone.disabled = false;
-        phone.value = '';
-        document.getElementById('phone_hint').hidden = true;
-
-        const selectedCountry = country.selectedOptions[0];
-        const codeSelectedCountry = selectedCountry.dataset.alpha2;
-
-        const example = phoneNumberUtil.getExampleNumber(codeSelectedCountry);
-
-        const formatted = phoneNumberUtil.format(example, phoneNumberFormat.INTERNATIONAL);
-        mask.updateOptions({mask: formatted.replace(/\d/g, '0')});
+    const cachedUserCountry = sessionStorage.getItem('userCountry');
+    if (cachedUserCountry) {
+        return cachedUserCountry;
     }
+
+    const res = await fetch("https://ipapi.co/json");
+    const data = await res.json();
+    sessionStorage.setItem('userCountry', data.country_code)
+    return data.country_code;
+}
+
+const phone = document.getElementById('phone');
+
+const iti = window.intlTelInput(phone, {
+    initialCountryLookup,
+    classNames: {
+        input: "border rounded-md w-full px-3 py-2",
+        container: "w-full block",
+    },
+    formatAsYouType: true,
+    customPlaceholder: () => 'Enter your number',
+    loadUtils: () =>
+        import('https://cdn.jsdelivr.net/npm/intl-tel-input@29.5.2/dist/js/utils.js'),
 });
 
-if(phone.value !== '' && country.value !== '') {
-    phone.disabled = false;
-    phoneHint.hidden = true
-
-    const selectedCountry = country.selectedOptions[0];
-    const countryCode = selectedCountry.dataset.alpha2;
-
-    const number = phoneNumberUtil.parse(phone.value, countryCode);
-    phone.value = phoneNumberUtil.format(number, phoneNumberFormat.INTERNATIONAL)
-}
 
 
 

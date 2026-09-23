@@ -113,9 +113,10 @@ class Request
             'size' => "File size must be $param KB or less",
             'birthdate' => 'Birth date cannot be in the future',
             'phone' => match ($param['typError']) {
-                'format' => "Invalid phone number format, e.g. $param[expectedFormat]",
-                'countryCode' => "Invalid country code, expected $param[expectedCountryCode]",
-                'carrier' => "This carrier code $param[receivedCarrierCode] doesn't exist"
+                'format' => "Invalid phone number format",
+                'long' => "Your number is too long",
+                'short' => "Your number is too short",
+                'invalid' => 'Please enter a valid phone number'
             }
         };
     }

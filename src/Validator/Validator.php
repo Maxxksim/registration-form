@@ -58,7 +58,7 @@ class Validator
                     'unique' => $this->validateUnique($data[$field], $field) ? 'unique' : null,
                     'email' => !filter_var($data[$field], FILTER_VALIDATE_EMAIL) ? 'email' : null,
                     'int' => !ctype_digit($data[$field]) ? 'int' : null,
-                    'phone' => !($result = $this->validatePhoneNumber($data[$field], $data['country'] ?? $session['steps']['data']['country']))['result'] ? ['phone', $result] : null,
+                    'phone' => !($result = $this->validatePhoneNumber($data[$field]))['result'] ? ['phone', $result] : null,
                     'date' => !$this->validateDate($data[$field]) ? 'date' : null,
                     'birthdate' => !$this->validateBirthdate($data[$field]) ? 'birthdate' : null,
                 };
@@ -73,16 +73,14 @@ class Validator
         return ['validatedData' => $data, 'errors' => $errors];
     }
 
-    private function validatePhoneNumber(string $phoneNumber, string $country): bool|array
+    private function validatePhoneNumber(string $phoneNumber): bool|array
     {
-        $countryData = $this->countries->name(trim($country));
-        $countryCode = $countryData['alpha2'];
+
         try {
-            $parsedNumber = $this->phoneNumberUtil->parse($phoneNumber, $countryCode);
+            $parsedNumber = $this->phoneNumberUtil->parse($phoneNumber);
         } catch (Exception $e) {
             return [
                 'result' => false,
-                'expectedFormat' => $this->getExamplePhoneNumber($countryCode),
                 'typError' => 'format'
             ];
         }
@@ -90,22 +88,22 @@ class Validator
         $possibleReason = $this->phoneNumberUtil->isPossibleNumberWithReason($parsedNumber);
 
         if ($possibleReason !== ValidationResult::IS_POSSIBLE) {
-            $expectedCountryCode = $this->phoneNumberUtil->getCountryCodeForRegion($countryCode);
-            return [
-                'result' => false,
-                'expectedCountryCode' => $expectedCountryCode,
-                'typError' => 'countryCode'
-            ];
+            return match ($possibleReason) {
+                ValidationResult::TOO_SHORT => [
+                    'result' => false,
+                    'typError' => 'short'
+                ],
+                ValidationResult::TOO_LONG => [
+                    'result' => false,
+                    'typError' => 'long'
+                ]
+            };
         }
 
         if (!$this->phoneNumberUtil->isValidNumber($parsedNumber)) {
-            $nationalNumber = $this->phoneNumberUtil->getNationalSignificantNumber($parsedNumber);
-            $codeLength = $this->phoneNumberUtil->getLengthOfNationalDestinationCode($parsedNumber);
-            $receivedCarrierCode = substr($nationalNumber, 0, $codeLength);
             return [
                 'result' => false,
-                'typError' => 'carrier',
-                'receivedCarrierCode' => $receivedCarrierCode
+                'typError' => 'invalid'
             ];
         }
 

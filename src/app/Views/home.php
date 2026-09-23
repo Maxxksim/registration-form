@@ -8,6 +8,7 @@ declare(strict_types=1);
  * @var $steps
  * @var $countMembers
  * @var $shareData
+ * @var $countriesCodes
  *
  */
 
@@ -21,16 +22,15 @@ $current = $steps['current'];
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-          crossorigin=""/>
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-            crossorigin=""></script>
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://cdn.jsdelivr.net/npm/google-libphonenumber"></script>
     <script src="https://unpkg.com/imask"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@29.5.2/dist/css/intlTelInput.css">
+    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@29.5.2/dist/js/intlTelInput.min.js"></script>
     <title>Registration Form</title>
 </head>
 
@@ -43,7 +43,7 @@ $current = $steps['current'];
     <?php $view->component('step2', ['steps' => $steps]); ?>
 </div>
 <div id="stepThanks" class="<?= $current === 'stepThanks' ? '' : 'hidden' ?>">
-    <?php $view->component('stepThanks', ['countMembers' => $countMembers, 'shareData' => $shareData]); ?>
+    <?php $view->component('stepThanks', ['countMembers' => $countMembers, 'shareData' => $shareData, 'countriesCodes' => $countriesCodes]); ?>
 </div>
 
 <script src="/js/script.js"></script>

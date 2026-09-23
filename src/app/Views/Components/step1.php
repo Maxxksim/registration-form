@@ -5,6 +5,7 @@ declare(strict_types=1);
 /**
  * @var $countries
  * @var $steps
+ * @var $countriesCodes
  */
 
 ?>
@@ -65,12 +66,11 @@ declare(strict_types=1);
     </div>
     <div class="relative z-0 w-full group"><label
                 class="after:ml-1 after:text-red-500 after:content-['*']">Phone</label>
-        <input type="tel" value="<?= htmlspecialchars($steps['data']['phone'] ?? '') ?>" disabled id="phone"
+        <input type="tel" id="phone"
                name="phone"
                required
-
+               value="<?= htmlspecialchars($steps['data']['phone'] ?? '') ?>"
                class="border rounded-md w-full px-3 py-2">
-        <p class="mt-1 text-xs text-gray-500" id="phone_hint">Select a country first</p>
         <p class="hidden text-red-700" id="phone_error"></p>
     </div>
     <div class="relative z-0 w-full group"><label
