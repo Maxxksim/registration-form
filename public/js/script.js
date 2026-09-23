@@ -124,16 +124,17 @@ document.getElementById('photo').addEventListener('change', function () {
 function initInputs() {
     if (!inputsForInit) {
         const birthdateMax = new Date().toISOString().split('T')[0];
+        const maxDate = new Date(birthdateMax)
         flatPicker = flatpickr("#birthdate", {
             dateFormat: "Y-m-d",
             maxDate: birthdateMax,
-            onChange : function(selectedDates, dateStr, instance) {
-                if(selectedDates > birthdateMax) {
+            onChange: function(selectedDates, dateStr, instance) {
+                if (selectedDates[0] > birthdateMax) {
                     showErrors({
-                        errors : {
-                            "birthdate" : "Birthdate cannot be in the future"
-                        }
-                    })
+                        birthdate: "Birthdate cannot be in the future"
+                    });
+                } else {
+                    clearErrors();
                 }
             },
         });
