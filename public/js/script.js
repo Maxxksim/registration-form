@@ -44,12 +44,12 @@ async function request(url, formData) {
 }
 
 function switchSteps(step) {
-    document.getElementById('step1').classList.add('hidden');
-    document.getElementById('step2').classList.add('hidden');
-    document.getElementById(step).classList.remove('hidden');
     if (step === 'step1') {
         initPhoneInput();
     }
+    document.getElementById('step1').classList.add('hidden');
+    document.getElementById('step2').classList.add('hidden');
+    document.getElementById(step).classList.remove('hidden');
 }
 
 document.getElementById('stepTwoBtn').addEventListener('click', async function () {
@@ -64,7 +64,12 @@ document.getElementById('stepOneBtn').addEventListener('click', async function (
     clearErrors();
     const formData = getForm('step1-form');
 
-    formData.set('phone', phone.value);
+    if(iti) {
+        await iti.promise
+        const number = iti.getNumber()
+        console.log(number);
+        formData.set('phone', number);
+    }
 
     const result = await request('/register/steps/one', formData);
 
@@ -135,9 +140,6 @@ function initPhoneInput() {
             return data.country_code;
         }
 
-        if (phone.dataset.itiInitialized) {
-            return;
-        }
         iti = window.intlTelInput(phone, {
             initialCountryLookup,
             classNames: {
@@ -149,7 +151,6 @@ function initPhoneInput() {
             loadUtils: () =>
                 import('https://cdn.jsdelivr.net/npm/intl-tel-input@29.5.2/dist/js/utils.js'),
         });
-        phone.dataset.itiInitialized = 'true';
     }
 }
 
