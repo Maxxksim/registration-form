@@ -15,7 +15,7 @@ class HomeController extends Controller
         $member = new Member($this->db, $this->phoneNumberUtil, $this->countries);
         $countMembers = count($member->getMembers());
         if (!isset($_SESSION['steps']['current'])) {
-            $_SESSION['steps']['current'] = $this->steps[0];
+            $_SESSION['steps']['current'] = 'step1';
         }
         $steps = $_SESSION['steps'];
 

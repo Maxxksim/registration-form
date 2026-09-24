@@ -11,7 +11,7 @@ use Src\Database\Db;
 class Model
 {
     protected static array $fillable = [];
-    protected array $attributes = [];
+    private(set) array $attributes = [];
 
     public function __construct(protected Db $db, protected PhoneNumberUtil $phoneNumberUtil, protected ISO3166 $countries)
     {
@@ -27,18 +27,18 @@ class Model
         return $this;
     }
 
-    public function create(array $data): static
+    public function create(array $data): array
     {
         $this->fill($data);
         $this->insertData($this->attributes);
-        return $this;
+        return $this->attributes;
     }
 
-    public function update(string $where, string $value, array $data): static
+    public function update(string $where, string $value, array $data): array
     {
         $this->fill($data);
         $this->updateData($where, $value, $this->attributes);
-        return $this;
+        return $this->attributes;
     }
 
     private function insertData(array $data): void

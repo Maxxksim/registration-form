@@ -21,33 +21,22 @@ class MemberController extends Controller
 
     public function backStep(): void
     {
-        http_response_code(200);
-        echo json_encode(['backStep' => $this->getStep('back')]);
-    }
-
-    private function getStep(string $where): string
-    {
-        $currentStep = array_search($_SESSION['steps']['current'], $this->steps, true);
-
-        if ($currentStep === false) {
-            http_response_code(400);
-            echo json_encode(['errors' => ['step' => 'No step available.']]);
+        if (!isset($_SESSION['steps']['current']) && $_SESSION['steps']['current'] !== 'step2') {
+            http_response_code(403);
+            echo json_encode(['error' => 'You must be on the step 2']);
             exit();
         }
-
-        if ($where === 'next') {
-            $doStep = $currentStep + 1;
-        } else {
-            $doStep = $currentStep - 1;
-        }
-
-        $_SESSION['steps']['current'] = $this->steps[$doStep];
-
-        return $this->steps[$doStep];
+        http_response_code(200);
+        echo json_encode(['backStep' => 'step1']);
     }
 
     public function stepOne(): void
     {
+        if (!isset($_SESSION['steps']['current']) && $_SESSION['steps']['current'] !== 'step1') {
+            http_response_code(403);
+            echo json_encode(['error' => 'You must be on the step 1']);
+            exit();
+        }
         $memberRequest = new MemberStepOneRequest($this->request->validator, $this->request->get, $this->request->post, $this->request->files, $this->request->server);
         $member = new Member($this->db, $this->phoneNumberUtil, $this->countries);
         $result = $memberRequest->validated();
@@ -63,19 +52,24 @@ class MemberController extends Controller
         $newEmail = $validatedData['email'] ?? null;
 
         if ($savedEmail && $savedEmail === $newEmail) {
-            $member->update('email', $_SESSION['steps']['data']['email'], $validatedData);
-            $_SESSION['steps']['data'] = array_merge($_SESSION['steps']['data'], $validatedData);
-
+            $savedData = $member->update('email', $_SESSION['steps']['data']['email'], $validatedData);
+            $_SESSION['steps']['data'] = array_merge($_SESSION['steps']['data'], $savedData);
         } else {
-            $member->create($validatedData);
-            $_SESSION['steps']['data'] = array_merge($validatedData);
+            $savedData = $member->create($validatedData);
+            $_SESSION['steps']['data'] = array_merge($savedData);
         }
-        echo json_encode(['nextStep' => $this->getStep('next')]);
+        $_SESSION['steps']['current'] = ['step2'];
+        echo json_encode(['nextStep' => 'step2']);
         exit();
     }
 
     public function stepTwo(): void
     {
+        if (!isset($_SESSION['steps']['current']) && $_SESSION['steps']['current'] !== 'step2') {
+            http_response_code(403);
+            echo json_encode(['error' => 'You must be on the step 2']);
+            exit();
+        }
         $memberRequest = new MemberStepTwoRequest($this->request->validator, $this->request->get, $this->request->post, $this->request->files, $this->request->server);
         $member = new Member($this->db, $this->phoneNumberUtil, $this->countries);
 
@@ -94,11 +88,10 @@ class MemberController extends Controller
         }
 
         $member->update('email', $_SESSION['steps']['data']['email'], $validatedData);
-        $_SESSION['steps']['data'] = array_merge($_SESSION['steps']['data'], $validatedData);
 
         $countMembers = count($member->getMembers());
 
-        echo json_encode(['nextStep' => $this->getStep('next'), 'countMembers' => $countMembers]);
+        echo json_encode(['nextStep' => 'stepThanks', 'countMembers' => $countMembers]);
         exit();
     }
 }
