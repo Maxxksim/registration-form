@@ -59,7 +59,7 @@ class Validator
                     'phone' => !($result = $this->validatePhoneNumber($data[$field]))['result'] ? ['phone', $result] : null,
                     'date' => !$this->validateDate($data[$field]) ? 'date' : null,
                     'birthdate' => !$this->validateBirthdate($data[$field]) ? 'birthdate' : null,
-                    'country.exists' => !$this->validateCountryExists($data[$field]) ? 'country' : null,
+                    'country' => !$this->validateCountry($data[$field]) ? 'country' : null,
                 };
 
                 if ($error) {
@@ -75,7 +75,7 @@ class Validator
         return ['validatedData' => $validatedData, 'errors' => $errors];
     }
 
-    private function validateCountryExists(string $value): bool
+    private function validateCountry(string $value): bool
     {
         return in_array(mb_strtolower($value), array_map('mb_strtolower', array_column($this->countries->all(), 'name')), true);
     }
@@ -114,12 +114,6 @@ class Validator
         }
 
         return ['result' => true];
-    }
-
-    private function getExamplePhoneNumber($countryCode): string
-    {
-        $example = $this->phoneNumberUtil->getExampleNumber($countryCode);
-        return $this->phoneNumberUtil->format($example, PhoneNumberFormat::INTERNATIONAL);
     }
 
     private function validateUnique(string $value, string $field, string $table): bool
