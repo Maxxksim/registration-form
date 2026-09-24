@@ -16,8 +16,8 @@ class MemberStepOneRequest extends Request
             'birthdate' => ['required', 'date', 'birthdate'],
             'report_subject' => ['required', 'string', 'max:255'],
             'phone' => ['required', 'phone'],
-            'country' => ['required', 'string'],
-            'email' => ['required', 'email', 'unique:members'],
+            'country' => ['required', 'string', 'max:255', 'country.exists'],
+            'email' => ['required', 'email', 'unique:members', 'max:255'],
         ];
     }
 

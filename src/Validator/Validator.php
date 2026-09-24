@@ -17,7 +17,7 @@ class Validator
 {
     private array $allowedFields = ['first_name', 'last_name', 'birthdate', 'report_subject', 'country', 'phone', 'email', 'company', 'position', 'about_me'];
 
-    public function __construct(private Db $db, private PhoneNumberUtil $phoneNumberUtil)
+    public function __construct(private Db $db, private PhoneNumberUtil $phoneNumberUtil, private ISO3166 $countries)
     {
 
     }
@@ -61,6 +61,7 @@ class Validator
                     'phone' => !($result = $this->validatePhoneNumber($data[$field]))['result'] ? ['phone', $result] : null,
                     'date' => !$this->validateDate($data[$field]) ? 'date' : null,
                     'birthdate' => !$this->validateBirthdate($data[$field]) ? 'birthdate' : null,
+                    'country.exists' => !$this->validateCountryExists($data[$field]) ? 'country' : null,
                 };
 
                 if ($error) {
@@ -74,6 +75,11 @@ class Validator
         }
 
         return ['validatedData' => $validatedData, 'errors' => $errors];
+    }
+
+    private function validateCountryExists(string $value): bool
+    {
+        return in_array(mb_strtolower($value), array_map('mb_strtolower', array_column($this->countries->all(), 'name')), true);
     }
 
     private function validatePhoneNumber(string $phoneNumber): bool|array
