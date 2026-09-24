@@ -27,7 +27,9 @@ class Validator
         $errors = [];
         $validatedData = [];
         foreach ($rules as $field => $ruleSet) {
-
+            if (isset($data[$field]) && is_string($data[$field])) {
+                $data[$field] = $this->normalize($field, $ruleSet, $data[$field]);
+            }
             foreach ($ruleSet as $rule) {
                 [$type, $params] = array_pad(explode(':', $rule, 2), 2, null);
 
@@ -40,10 +42,6 @@ class Validator
                     break;
                 } else if (!isset($data[$field])) {
                     break;
-                }
-
-                if (!is_array($data[$field])) {
-                    $data[$field] = trim($data[$field]);
                 }
 
                 $error = match ($type) {
@@ -188,6 +186,17 @@ class Validator
         }
 
         return false;
+    }
+
+    private function normalize(string $field, array $ruleSet, string $value): string
+    {
+        $value = trim($value);
+
+        if (in_array('email', $ruleSet, true)) {
+            $value = mb_strtolower($value);
+        }
+
+        return $value;
     }
 }
 
