@@ -17,15 +17,15 @@ class Validator
 {
     private array $allowedFields = ['first_name', 'last_name', 'birthdate', 'report_subject', 'country', 'phone', 'email', 'company', 'position', 'about_me'];
 
-    public function __construct(private Db $db, private PhoneNumberUtil $phoneNumberUtil, private ISO3166 $countries)
+    public function __construct(private Db $db, private PhoneNumberUtil $phoneNumberUtil)
     {
 
     }
 
-    public function validate(array $data, array $rules, array $session = []): array
+    public function validate(array $data, array $rules): array
     {
         $errors = [];
-
+        $validatedData = [];
         foreach ($rules as $field => $ruleSet) {
 
             foreach ($ruleSet as $rule) {
@@ -55,7 +55,7 @@ class Validator
                     'min' => mb_strlen($data[$field]) < (int)$params ? ['min', (int)$params] : null,
                     'max' => mb_strlen($data[$field]) > (int)$params ? ['max', (int)$params] : null,
                     'string' => !is_string($data[$field]) ? 'string' : null,
-                    'unique' => $this->validateUnique($data[$field], $field) ? 'unique' : null,
+                    'unique' => $this->validateUnique($data[$field], $field, $params) ? 'unique' : null,
                     'email' => !filter_var($data[$field], FILTER_VALIDATE_EMAIL) ? 'email' : null,
                     'int' => !ctype_digit($data[$field]) ? 'int' : null,
                     'phone' => !($result = $this->validatePhoneNumber($data[$field]))['result'] ? ['phone', $result] : null,
@@ -68,9 +68,12 @@ class Validator
                     break;
                 }
             }
+            if (!isset($errors[$field]) && isset($data[$field])) {
+                $validatedData[$field] = $data[$field];
+            }
         }
 
-        return ['validatedData' => $data, 'errors' => $errors];
+        return ['validatedData' => $validatedData, 'errors' => $errors];
     }
 
     private function validatePhoneNumber(string $phoneNumber): bool|array
@@ -115,10 +118,10 @@ class Validator
         return $this->phoneNumberUtil->format($example, PhoneNumberFormat::INTERNATIONAL);
     }
 
-    private function validateUnique(string $value, string $field): bool
+    private function validateUnique(string $value, string $field, string $table): bool
     {
         if (in_array($field, $this->allowedFields)) {
-            $stmt = $this->db->pdo->prepare("SELECT * FROM members WHERE $field = :value");
+            $stmt = $this->db->pdo->prepare("SELECT * FROM $table WHERE $field = :value");
             $stmt->bindParam(':value', $value);
             $stmt->execute();
 

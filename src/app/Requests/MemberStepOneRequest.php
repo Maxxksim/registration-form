@@ -17,7 +17,7 @@ class MemberStepOneRequest extends Request
             'report_subject' => ['required', 'string', 'max:255'],
             'phone' => ['required', 'phone'],
             'country' => ['required', 'string'],
-            'email' => ['required', 'email', 'unique'],
+            'email' => ['required', 'email', 'unique:members'],
         ];
     }
 

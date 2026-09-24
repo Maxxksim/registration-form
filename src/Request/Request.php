@@ -35,15 +35,15 @@ class Request
     {
         $rules = static::rules();
         [$preparedData, $preparedRules] = $this->removeUnchangedData(array_merge($this->getData(), array_filter($this->files, fn($file) => $file['error'] !== UPLOAD_ERR_NO_FILE)), $rules);
-        $validatedData = $this->validator->validate($preparedData, $preparedRules, $_SESSION);
+        $result = $this->validator->validate($preparedData, $preparedRules);
 
-        if (!empty($validatedData['errors'])) {
-            foreach ($validatedData['errors'] as $field => $error) {
-                $validatedData['errors'][$field] = $this->getErrorMessage($this->parseField($field), $error);
+        if (!empty($result['errors'])) {
+            foreach ($result['errors'] as $field => $error) {
+                $result['errors'][$field] = $this->getErrorMessage($this->parseField($field), $error);
             }
         }
 
-        return $validatedData;
+        return $result;
     }
 
     private function removeUnchangedData(array $data, array $rules): array
