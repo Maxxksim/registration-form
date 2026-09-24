@@ -59,7 +59,10 @@ class MemberController extends Controller
             exit();
         }
 
-        if (isset($_SESSION['steps']['data'])) {
+        $savedEmail = $_SESSION['steps']['data']['email'] ?? null;
+        $newEmail = $validatedData['email'] ?? null;
+
+        if ($savedEmail && $savedEmail === $newEmail) {
             $member->update('email', $_SESSION['steps']['data']['email'], $validatedData);
             $_SESSION['steps']['data'] = array_merge($_SESSION['steps']['data'], $validatedData);
 

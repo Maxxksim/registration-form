@@ -27,7 +27,7 @@ class Model
         return $this;
     }
 
-    protected function create(array $data): static
+    public function create(array $data): static
     {
         $this->fill($data);
         $this->insertData($this->attributes);
