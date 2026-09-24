@@ -37,7 +37,7 @@ $current = $steps['current'];
 </head>
 
 <body class="bg-blue-100">
-
+<div id="map" class="h-[450px] w-auto border rounded-md m-10"></div>
 <div id="step1" class="<?= $current !== 'step1' ? 'hidden' : '' ?>">
     <?php $view->component('step1', ['countries' => $countries, 'steps' => $steps]); ?>
 </div>
