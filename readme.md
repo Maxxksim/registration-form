@@ -10,4 +10,4 @@ Steps to start the project:
 5. Enter command docker compose up --build
 6. The app will be available at `http://localhost:8000` or with your port if you changed SERVER_PORT in .env
 
-Database migrations will execute automaticlly
+Database migrations will execute automatically
