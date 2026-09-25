@@ -4,8 +4,16 @@ declare(strict_types=1);
 
 namespace Src\Storage;
 
+use finfo;
+
 class Storage
 {
+    private array $types = [
+        'image/jpeg' => 'jpg',
+        'image/png' => 'png',
+        'image/webp' => 'webp',
+    ];
+
     public function generateFileName($extension): string
     {
         return md5(uniqid((string)rand(), true)) . ".$extension";
@@ -17,13 +25,16 @@ class Storage
             return null;
         }
 
+        $fileInfo = new finfo(FILEINFO_MIME_TYPE);
+        $mime = $fileInfo->file($file['tmp_name']);
+        $extension = substr($mime, strpos($mime, '/') + 1);
         $pathToSave = __DIR__ . '/../../public/photos';
 
         if (!is_dir($pathToSave)) {
             mkdir($pathToSave, 0777, true);
         }
 
-        $fileName = $this->generateFileName(pathinfo($file['name'], PATHINFO_EXTENSION));
+        $fileName = $this->generateFileName($extension);
 
         move_uploaded_file($file['tmp_name'], "$pathToSave/$fileName");
 

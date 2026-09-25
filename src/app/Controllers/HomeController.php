@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Src\app\Controllers;
 
 use Src\app\Models\Member;
-use Src\app\Requests\MemberStepOneRequest;
 use Src\Controller\Controller;
 
 class HomeController extends Controller

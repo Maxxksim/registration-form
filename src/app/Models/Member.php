@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Src\app\Models;
 
-use libphonenumber\PhoneNumberFormat;
 use Src\Model\Model;
 
 class Member extends Model

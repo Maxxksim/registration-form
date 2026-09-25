@@ -29,7 +29,7 @@ class Validator
         $validatedData = [];
         foreach ($rules as $field => $ruleSet) {
             if (isset($data[$field]) && is_string($data[$field])) {
-                $data[$field] = $this->normalize($field, $ruleSet, $data[$field]);
+                $data[$field] = $this->normalize($ruleSet, $data[$field]);
             }
             foreach ($ruleSet as $rule) {
                 [$type, $params] = array_pad(explode(':', $rule, 2), 2, null);
@@ -183,7 +183,7 @@ class Validator
         return false;
     }
 
-    private function normalize(string $field, array $ruleSet, string $value): string
+    private function normalize(array $ruleSet, string $value): string
     {
         $value = trim($value);
 

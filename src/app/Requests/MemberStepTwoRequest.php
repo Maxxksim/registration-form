@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Src\app\Requests;
 
 use Src\Request\Request;

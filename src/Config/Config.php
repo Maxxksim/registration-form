@@ -6,7 +6,7 @@ namespace Src\Config;
 
 class Config
 {
-    public function config(string $config)
+    public function config(string $config): string
     {
         [$cfg, $key] = explode('.', $config);
         $configs = require __DIR__ . "/../app/Configs/$cfg.php";
