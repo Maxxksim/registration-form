@@ -5,12 +5,11 @@ declare(strict_types=1);
 /**
  * @var $countries
  * @var $steps
- * @var $countriesCodes
  */
 
 ?>
 
-<div id="map" class="h-[450px] w-auto border rounded-md m-10"></div>
+
 <div class="flex flex-col  m-3">
     <h1 class="text-lg">To participate in the conference, please fill out the form:</h1>
 </div>

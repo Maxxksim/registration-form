@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Src\Request;
 
+use Src\app\Requests\MemberStepOneRequest;
 use Src\Validator\Validator;
 
 class Request
@@ -22,7 +23,7 @@ class Request
         return $this->server['REQUEST_URI'];
     }
 
-    private function getData(): array
+    public function getData(): array
     {
         if ($this->getRequestMethod() === 'POST') {
             return $this->post;
@@ -34,38 +35,16 @@ class Request
     public function validated(): array
     {
         $rules = static::rules();
-        [$preparedData, $preparedRules] = $this->removeUnchangedData(array_merge($this->getData(), array_filter($this->files, fn($file) => $file['error'] !== UPLOAD_ERR_NO_FILE)), $rules);
-        $validatedData = $this->validator->validate($preparedData, $preparedRules, $_SESSION);
+        $preparedData = array_merge($this->getData(), array_filter($this->files, fn($file) => $file['error'] !== UPLOAD_ERR_NO_FILE));
+        $result = $this->validator->validate($preparedData, $rules);
 
-        if (!empty($validatedData['errors'])) {
-            foreach ($validatedData['errors'] as $field => $error) {
-                $validatedData['errors'][$field] = $this->getErrorMessage($this->parseField($field), $error);
+        if (!empty($result['errors'])) {
+            foreach ($result['errors'] as $field => $error) {
+                $result['errors'][$field] = $this->getErrorMessage($this->parseField($field), $error);
             }
         }
 
-        return $validatedData;
-    }
-
-    private function removeUnchangedData(array $data, array $rules): array
-    {
-        $oldData = $_SESSION['steps']['data'] ?? [];
-
-        if (isset($_SESSION['steps']['data'])) {
-            foreach ($data as $field => $value) {
-                if (isset($_SESSION['steps']['data'][$field])) {
-
-                    if (is_array($value)) {
-                        continue;
-                    }
-
-                    if ($oldData[$field] === $value) {
-                        unset($data[$field]);
-                        unset($rules[$field]);
-                    }
-                }
-            }
-        }
-        return [$data, $rules];
+        return $result;
     }
 
     private function parseField(string $unparsedField): string
@@ -117,7 +96,8 @@ class Request
                 'long' => "Your number is too long",
                 'short' => "Your number is too short",
                 'invalid' => 'Please enter a valid phone number'
-            }
+            },
+            'country' => "The country doesn't exist"
         };
     }
 }

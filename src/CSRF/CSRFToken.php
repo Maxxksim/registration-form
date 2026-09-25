@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Src\CSRF;
 
 class CSRFToken
@@ -18,7 +20,8 @@ class CSRFToken
             if (!isset($headers['X-CSRF-Token']) ||
                 !hash_equals($_SESSION['csrf_token'], $headers['X-CSRF-Token'])) {
                 http_response_code(403);
-                die('CSRF token validation failed');
+                echo json_encode(['errors' => ['permission' => 'Your session has expired.']]);
+                exit();
             }
         }
     }

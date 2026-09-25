@@ -10,45 +10,69 @@ use Src\Database\Db;
 
 class Model
 {
+    protected static array $fillable = [];
+    private(set) array $attributes = [];
+
     public function __construct(protected Db $db, protected PhoneNumberUtil $phoneNumberUtil, protected ISO3166 $countries)
     {
 
     }
 
-    protected function insert(string $table, array $data): void
+    protected function fill(array $data): Model
     {
+        if (!empty(static::$fillable)) {
+            $this->attributes = array_intersect_key($data, array_flip(static::$fillable));
+        }
+
+        return $this;
+    }
+
+    public function create(array $data): array
+    {
+        $this->fill($data);
+        $this->insertData($this->attributes);
+        return $this->attributes;
+    }
+
+    public function update(string $where, string $value, array $data): array
+    {
+        $this->fill($data);
+        $this->updateData($where, $value, $this->attributes);
+        return $this->attributes;
+    }
+
+    private function insertData(array $data): void
+    {
+        if (empty($data)) {
+            return;
+        }
+
+        $table = static::$table;
         $fields = array_keys($data);
         $columns = implode(', ', $fields);
         $binds = implode(', ', array_map(fn($field) => ":$field", $fields));
-        $sql = "INSERT INTO $table ($columns) VALUES ($binds)";
+        $sql = "INSERT INTO  $table ($columns) VALUES ($binds)";
         $stmt = $this->db->pdo->prepare($sql);
         $stmt->execute($data);
     }
 
-    public function update(string $where, string $whereValue, array $data): void
+
+    private function updateData(string $where, string|int $value, array $data): void
     {
         $table = static::$table;
-        $fieldsFromModel = static::fields();
-        $fields = array_keys($data);
+        if (empty($data)) {
+            return;
+        }
+
         $preparedFields = [];
         $bindValues = [];
-        foreach ($fieldsFromModel as $field) {
-            if (in_array($field, $fields, true)) {
-                $preparedFields[] = "$field=?";
-                $bindValues[] = $data[$field];
-            }
-        }
-
-        if (empty($preparedFields)) {
-            return;
-        }
-
-        if (!in_array($where, $fieldsFromModel, true)) {
-            return;
+        foreach ($data as $field => $fieldValue) {
+            $preparedFields[] = "$field=?";
+            $bindValues[] = $fieldValue;
         }
 
         $binds = implode(', ', $preparedFields);
-        $bindValues[] = $whereValue;
+        $bindValues[] = $value;
         $sql = "UPDATE $table SET $binds WHERE $where=?";
 
         $stmt = $this->db->pdo->prepare($sql);

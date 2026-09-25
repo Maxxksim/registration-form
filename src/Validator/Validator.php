@@ -8,6 +8,7 @@ use DateTime;
 use Exception;
 use finfo;
 use League\ISO3166\ISO3166;
+use libphonenumber\NumberParseException;
 use libphonenumber\PhoneNumberFormat;
 use libphonenumber\PhoneNumberUtil;
 use libphonenumber\ValidationResult;
@@ -22,12 +23,14 @@ class Validator
 
     }
 
-    public function validate(array $data, array $rules, array $session = []): array
+    public function validate(array $data, array $rules): array
     {
         $errors = [];
-
+        $validatedData = [];
         foreach ($rules as $field => $ruleSet) {
-
+            if (isset($data[$field]) && is_string($data[$field])) {
+                $data[$field] = $this->normalize($ruleSet, $data[$field]);
+            }
             foreach ($ruleSet as $rule) {
                 [$type, $params] = array_pad(explode(':', $rule, 2), 2, null);
 
@@ -42,10 +45,6 @@ class Validator
                     break;
                 }
 
-                if (!is_array($data[$field])) {
-                    $data[$field] = trim($data[$field]);
-                }
-
                 $error = match ($type) {
                     'required' => $data[$field] === '' ? 'required' : null,
                     'file' => $this->validateFile($data[$field]['tmp_name']) ? 'file' : null,
@@ -55,12 +54,13 @@ class Validator
                     'min' => mb_strlen($data[$field]) < (int)$params ? ['min', (int)$params] : null,
                     'max' => mb_strlen($data[$field]) > (int)$params ? ['max', (int)$params] : null,
                     'string' => !is_string($data[$field]) ? 'string' : null,
-                    'unique' => $this->validateUnique($data[$field], $field) ? 'unique' : null,
+                    'unique' => $this->validateUnique($data[$field], $field, $params) ? 'unique' : null,
                     'email' => !filter_var($data[$field], FILTER_VALIDATE_EMAIL) ? 'email' : null,
                     'int' => !ctype_digit($data[$field]) ? 'int' : null,
                     'phone' => !($result = $this->validatePhoneNumber($data[$field]))['result'] ? ['phone', $result] : null,
                     'date' => !$this->validateDate($data[$field]) ? 'date' : null,
                     'birthdate' => !$this->validateBirthdate($data[$field]) ? 'birthdate' : null,
+                    'country' => !$this->validateCountry($data[$field]) ? 'country' : null,
                 };
 
                 if ($error) {
@@ -68,9 +68,17 @@ class Validator
                     break;
                 }
             }
+            if (!isset($errors[$field]) && isset($data[$field])) {
+                $validatedData[$field] = $data[$field];
+            }
         }
 
-        return ['validatedData' => $data, 'errors' => $errors];
+        return ['validatedData' => $validatedData, 'errors' => $errors];
+    }
+
+    private function validateCountry(string $value): bool
+    {
+        return in_array(mb_strtolower($value), array_map('mb_strtolower', array_column($this->countries->all(), 'name')), true);
     }
 
     private function validatePhoneNumber(string $phoneNumber): bool|array
@@ -109,16 +117,10 @@ class Validator
         return ['result' => true];
     }
 
-    private function getExamplePhoneNumber($countryCode): string
-    {
-        $example = $this->phoneNumberUtil->getExampleNumber($countryCode);
-        return $this->phoneNumberUtil->format($example, PhoneNumberFormat::INTERNATIONAL);
-    }
-
-    private function validateUnique(string $value, string $field): bool
+    private function validateUnique(string $value, string $field, string $table): bool
     {
         if (in_array($field, $this->allowedFields)) {
-            $stmt = $this->db->pdo->prepare("SELECT * FROM members WHERE $field = :value");
+            $stmt = $this->db->pdo->prepare("SELECT * FROM $table WHERE $field = :value");
             $stmt->bindParam(':value', $value);
             $stmt->execute();
 
@@ -179,6 +181,31 @@ class Validator
         }
 
         return false;
+    }
+
+    private function normalize(array $ruleSet, string $value): string
+    {
+        $value = trim($value);
+
+        if (in_array('email', $ruleSet, true)) {
+            $value = mb_strtolower($value);
+        }
+
+        if (in_array('phone', $ruleSet, true)) {
+            $value = $this->normalizePhone($value);
+        }
+
+        return $value;
+    }
+
+    private function normalizePhone(string $numberPhone): string
+    {
+        try {
+            $parsed = $this->phoneNumberUtil->parse($numberPhone);
+            return $this->phoneNumberUtil->format($parsed, PhoneNumberFormat::E164);
+        } catch (NumberParseException) {
+            return $numberPhone;
+        }
     }
 }
 

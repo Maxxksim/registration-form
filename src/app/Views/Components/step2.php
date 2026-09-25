@@ -1,3 +1,9 @@
+<?php
+
+declare(strict_types=1);
+
+?>
+
 <form method="post" enctype="multipart/form-data" id="step2-form"
       class="max-w-md mx-auto flex flex-col gap-4 p-4">
     <input type="hidden" name="csrf_token" id="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
