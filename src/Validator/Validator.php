@@ -8,6 +8,7 @@ use DateTime;
 use Exception;
 use finfo;
 use League\ISO3166\ISO3166;
+use libphonenumber\NumberParseException;
 use libphonenumber\PhoneNumberFormat;
 use libphonenumber\PhoneNumberUtil;
 use libphonenumber\ValidationResult;
@@ -190,7 +191,21 @@ class Validator
             $value = mb_strtolower($value);
         }
 
+        if (in_array('phone', $ruleSet, true)) {
+            $value = $this->normalizePhone($value);
+        }
+
         return $value;
+    }
+
+    private function normalizePhone(string $numberPhone): string
+    {
+        try {
+            $parsed = $this->phoneNumberUtil->parse($numberPhone);
+            return $this->phoneNumberUtil->format($parsed, PhoneNumberFormat::E164);
+        } catch (NumberParseException) {
+            return $numberPhone;
+        }
     }
 }
 
