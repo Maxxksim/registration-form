@@ -5,7 +5,6 @@ declare(strict_types=1);
 /**
  * @var $countries
  * @var $steps
- * @var $countriesCodes
  */
 
 ?>

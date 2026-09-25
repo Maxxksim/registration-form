@@ -19,29 +19,16 @@ class HomeController extends Controller
         }
         $steps = $_SESSION['steps'];
 
-        $countriesCodes = $this->getCountriesCodes();
         $shareData = [
             'url' => $this->config->config('sharing.url'),
             'text' => $this->config->config('sharing.text'),
         ];
 
-        $this->view->view('home', ['countries' => $this->countries, 'steps' => $steps, 'countMembers' => $countMembers, 'shareData' => $shareData, 'countriesCodes' => $countriesCodes]);
-    }
-
-    private function getCountriesCodes(): array
-    {
-        $countriesCodes = [];
-        $supportedRegions = $this->phoneNumberUtil->getSupportedRegions();
-        foreach ($supportedRegions as $region) {
-            $countriesCodes[] = $this->phoneNumberUtil->getCountryCodeForRegion($region);
-        }
-        return $countriesCodes;
+        $this->view->view('home', ['countries' => $this->countries, 'steps' => $steps, 'countMembers' => $countMembers, 'shareData' => $shareData]);
     }
 
     public function index(): void
     {
-        session_destroy();
-
         $this->redirect('/start');
     }
 }

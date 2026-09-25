@@ -8,8 +8,6 @@ declare(strict_types=1);
  * @var $steps
  * @var $countMembers
  * @var $shareData
- * @var $countriesCodes
- *
  */
 
 $current = $steps['current'];
@@ -45,7 +43,7 @@ $current = $steps['current'];
     <?php $view->component('step2', ['steps' => $steps]); ?>
 </div>
 <div id="stepThanks" class="<?= $current === 'stepThanks' ? '' : 'hidden' ?>">
-    <?php $view->component('stepThanks', ['countMembers' => $countMembers, 'shareData' => $shareData, 'countriesCodes' => $countriesCodes]); ?>
+    <?php $view->component('stepThanks', ['countMembers' => $countMembers, 'shareData' => $shareData]); ?>
 </div>
 
 <script src="/js/script.js"></script>
