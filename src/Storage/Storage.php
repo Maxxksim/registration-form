@@ -8,13 +8,7 @@ use finfo;
 
 class Storage
 {
-    private array $types = [
-        'image/jpeg' => 'jpg',
-        'image/png' => 'png',
-        'image/webp' => 'webp',
-    ];
-
-    public function generateFileName($extension): string
+    public function generateFileName(string $extension): string
     {
         return md5(uniqid((string)rand(), true)) . ".$extension";
     }

@@ -24,7 +24,7 @@ declare(strict_types=1);
     <div class="relative z-0 w-full group"><label class="after:ml-1 after:text-red-500 after:content-['*']">First
             Name</label>
         <input type="text" autocomplete="off" value="<?= htmlspecialchars($steps['data']['first_name'] ?? '') ?>"
-               required name="first_name" class="border rounded-md w-full px-3 py-2">
+               required maxlength="100" name="first_name" class="border rounded-md w-full px-3 py-2">
         <p class="hidden text-red-700" id="first_name_error"></p>
     </div>
     <div class="relative z-0 w-full group"><label class="after:ml-1 after:text-red-500 after:content-['*']">Last
@@ -75,7 +75,7 @@ declare(strict_types=1);
     <div class="relative z-0 w-full group"><label
                 class="after:ml-1 after:text-red-500 after:content-['*']">Email</label>
         <input type="email" value="<?= htmlspecialchars($steps['data']['email'] ?? '') ?>" name="email"
-               required autocomplete="off" class="border rounded-md w-full px-3 py-2">
+               required maxlength="255" autocomplete="off" class="border rounded-md w-full px-3 py-2">
         <p class="hidden text-red-700" id="email_error"></p>
     </div>
     <button id="stepOneBtn" type="button" class="border rounded-md w-full px-3 py-2 hover:bg-gray-300">Next</button>

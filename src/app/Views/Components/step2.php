@@ -9,7 +9,7 @@ declare(strict_types=1);
     <input type="hidden" name="csrf_token" id="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
     <div class="flex flex-col gap-1">
         <label for="company" class="text-sm font-medium">Company</label>
-        <input type="text" autocomplete="off" id="company" name="company"
+        <input type="text" maxlength="255" autocomplete="off" id="company" name="company"
                value="<?= htmlspecialchars($steps['data']['company'] ?? '') ?>"
                class="border rounded-md w-full px-3 py-2">
         <p class="hidden text-red-700 text-sm" id="company_error"></p>
@@ -17,7 +17,7 @@ declare(strict_types=1);
 
     <div class="flex flex-col gap-1">
         <label for="position" class="text-sm font-medium">Position</label>
-        <input type="text" autocomplete="off" id="position" name="position"
+        <input type="text" maxlength="255" autocomplete="off" id="position" name="position"
                value="<?= htmlspecialchars($steps['data']['position'] ?? '') ?>"
                class="border rounded-md w-full px-3 py-2">
         <p class="hidden text-red-700 text-sm" id="position_error"></p>
@@ -25,7 +25,7 @@ declare(strict_types=1);
 
     <div class="flex flex-col gap-1">
         <label for="about_me" class="text-sm font-medium">About me</label>
-        <textarea name="about_me" autocomplete="off" id="about_me" rows="5"
+        <textarea name="about_me" maxlength="500" autocomplete="off" id="about_me" rows="5"
                   class="border rounded-md w-full px-3 py-2"><?= htmlspecialchars($steps['data']['about_me'] ?? '') ?></textarea>
         <p class="hidden text-red-700 text-sm" id="about_me_error"></p>
     </div>

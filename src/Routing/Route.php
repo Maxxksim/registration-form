@@ -12,12 +12,12 @@ class Route
 
     }
 
-    public static function post(string $path, $callback): Route
+    public static function post(string $path, callable $callback): Route
     {
         return new static('POST', $path, $callback);
     }
 
-    public static function get(string $path, $callback): Route
+    public static function get(string $path, callable $callback): Route
     {
         return new static('GET', $path, $callback);
     }

@@ -3,6 +3,7 @@ const phone = document.getElementById('phone');
 const stepOneBtn = document.getElementById('stepOneBtn');
 const stepTwoBtn = document.getElementById('stepTwoBtn');
 const countMembers = document.getElementById('countMembers');
+const backStepBtn = document.getElementById('backStepBtn');
 let iti = null;
 const map = L.map('map').setView([34.10114, -118.34376], 80);
 
@@ -40,6 +41,12 @@ async function request(url, formData) {
         return;
     }
 
+    errorHandler(response, result);
+
+    return result;
+}
+
+function errorHandler(response, result) {
     if (response.status === 500) {
         showErrors({'server': 'Something went wrong. Please try again later.'})
         return;
@@ -49,8 +56,6 @@ async function request(url, formData) {
         showErrors(result.errors);
         return;
     }
-
-    return result;
 }
 
 function switchSteps(step) {
@@ -97,12 +102,22 @@ stepOneBtn.addEventListener('click', async function () {
 
 });
 
-document.getElementById('backStepBtn').addEventListener('click', async function () {
+backStepBtn.addEventListener('click', async function () {
     clearErrors();
+    backStepBtn.disabled = true;
+    let result;
     const response = await fetch('/register/steps/back', {method: 'GET'});
-    const result = await response.json();
-    switchSteps(result.backStep);
+    try {
+        result = await response.json();
+    } catch (ParseError) {
+        showErrors({'server': 'Something went wrong. Please try again later.'})
+        return;
+    } finally {
+        backStepBtn.disabled = false;
+    }
 
+    errorHandler(response, result);
+    switchSteps(result.backStep);
 });
 
 function clearErrors() {
