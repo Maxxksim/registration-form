@@ -41,21 +41,29 @@ async function request(url, formData) {
         return;
     }
 
-    errorHandler(response, result);
+    if (!errorHandler(response, result)) {
+        return;
+    }
 
     return result;
 }
 
 function errorHandler(response, result) {
     if (response.status === 500) {
-        showErrors({'server': 'Something went wrong. Please try again later.'})
-        return;
+        showErrors({
+            server: 'Something went wrong. Please try again later.'
+        });
+
+        return false;
     }
 
     if (!response.ok) {
         showErrors(result.errors);
-        return;
+
+        return false;
     }
+
+    return true;
 }
 
 function switchSteps(step) {
@@ -116,7 +124,9 @@ backStepBtn.addEventListener('click', async function () {
         backStepBtn.disabled = false;
     }
 
-    errorHandler(response, result);
+    if (!errorHandler(response, result)) {
+        return;
+    }
     switchSteps(result.backStep);
 });
 
