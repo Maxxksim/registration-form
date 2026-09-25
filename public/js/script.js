@@ -1,5 +1,8 @@
 let inputsForInit = null;
 const phone = document.getElementById('phone');
+const stepOneBtn = document.getElementById('stepOneBtn');
+const stepTwoBtn = document.getElementById('stepTwoBtn');
+const countMembers = document.getElementById('countMembers');
 let iti = null;
 const map = L.map('map').setView([34.10114, -118.34376], 80);
 
@@ -29,11 +32,19 @@ async function request(url, formData) {
         body: formData,
     })
 
-    const result = await response.json();
-    if (response.status === 413) {
-        showErrors(result.errors);
+    let result;
+    try {
+        result = await response.json();
+    } catch (parseError) {
+        showErrors({'server': 'Something went wrong. Please try again later.'})
         return;
     }
+
+    if (response.status === 500) {
+        showErrors({'server': 'Something went wrong. Please try again later.'})
+        return;
+    }
+
     if (!response.ok) {
         showErrors(result.errors);
         return;
@@ -48,29 +59,40 @@ function switchSteps(step) {
     document.getElementById(step).classList.remove('hidden');
 }
 
-document.getElementById('stepTwoBtn').addEventListener('click', async function () {
-    const result = await request('/register/steps/two', getForm('step2-form'));
-    const countMembers = document.getElementById('countMembers');
-    if (result) {
-        countMembers.textContent = `All members (${result.countMembers})`;
-        switchSteps(result.nextStep);
+stepTwoBtn.addEventListener('click', async function () {
+    clearErrors();
+    stepTwoBtn.disabled = true;
+    try {
+        const result = await request('/register/steps/two', getForm('step2-form'));
+        if (result) {
+            countMembers.textContent = `All members (${result.countMembers})`;
+            switchSteps(result.nextStep);
+        }
+    } finally {
+        stepTwoBtn.disabled = false;
     }
 });
-document.getElementById('stepOneBtn').addEventListener('click', async function () {
+
+stepOneBtn.addEventListener('click', async function () {
     clearErrors();
     const formData = getForm('step1-form');
 
     if (iti) {
         await iti.promise
         const number = iti.getNumber()
-        console.log(number);
+
         formData.set('phone', number);
     }
 
-    const result = await request('/register/steps/one', formData);
+    stepOneBtn.disabled = true;
+    try {
+        const result = await request('/register/steps/one', formData);
 
-    if (result) {
-        switchSteps(result.nextStep);
+        if (result) {
+            switchSteps(result.nextStep);
+        }
+    } finally {
+        stepOneBtn.disabled = false;
     }
 
 });
@@ -95,6 +117,11 @@ function showErrors(errors) {
         let element = document.getElementById(`${field}_error`);
         element.textContent = error;
         element.classList.remove('hidden');
+        element.classList.remove('animate-pulse');
+        setTimeout(() => {
+            element.classList.add('animate-pulse');
+            setTimeout(() => element.classList.remove('animate-pulse'), 10000);
+        }, 10);
     }
 }
 
@@ -128,7 +155,7 @@ function initInputs() {
         flatPicker = flatpickr("#birthdate", {
             dateFormat: "Y-m-d",
             maxDate: birthdateMax,
-            onChange: function(selectedDates, dateStr, instance) {
+            onChange: function (selectedDates, dateStr, instance) {
                 if (selectedDates[0] > birthdateMax) {
                     showErrors({
                         birthdate: "Birthdate cannot be in the future"

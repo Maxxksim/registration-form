@@ -24,7 +24,7 @@ class MemberController extends Controller
     {
         if (!isset($_SESSION['steps']['current']) || $_SESSION['steps']['current'] !== 'step2') {
             http_response_code(403);
-            echo json_encode(['error' => 'You must be on the step 2']);
+            echo json_encode(['errors' => ['permission' => 'You must be on the step 2']]);
             exit();
         }
         $_SESSION['steps']['current'] = 'step1';
@@ -36,7 +36,7 @@ class MemberController extends Controller
     {
         if (!isset($_SESSION['steps']['current']) || $_SESSION['steps']['current'] !== 'step1') {
             http_response_code(403);
-            echo json_encode(['error' => 'You must be on the step 1']);
+            echo json_encode(['errors' => ['permission' => 'You must be on the step 1']]);
             exit();
         }
         $member = new Member($this->db, $this->phoneNumberUtil, $this->countries);
@@ -80,7 +80,7 @@ class MemberController extends Controller
     {
         if (!isset($_SESSION['steps']['current']) || $_SESSION['steps']['current'] !== 'step2') {
             http_response_code(403);
-            echo json_encode(['error' => 'You must be on the step 2']);
+            echo json_encode(['errors' => ['permission' => 'You must be on the step 2']]);
             exit();
         }
         $memberRequest = new MemberStepTwoRequest($this->request->validator, $this->request->get, $this->request->post, $this->request->files, $this->request->server);
